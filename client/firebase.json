@@ -1,0 +1,52 @@
+{
+  "hosting": {
+    "public": "build",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "headers": [
+      {
+        "source": "/service-worker.js",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "/call/**",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/login",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/api/sendMail",
+        "function": "sendMail"
+      }
+    ],
+    "redirects": [
+      {
+        "source": "/contact-us",
+        "destination": "https://bigmesslabs.notion.site/Contact-Us-fe070dbeb780434eb2039858480af6c7",
+        "type": 301
+      }
+    ]
+  },
+  "emulators": {
+    "hosting": {
+      "port": "3000"
+    },
+    "functions": {
+      "port": 5001
+    },
+    "ui": {
+      "enabled": true
+    }
+  },
+  "functions": {
+    "source": "functions"
+  }
+}
