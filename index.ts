@@ -17,4 +17,8 @@ io.on("connection", sockets);
 // In dev mode just hide hide app.uss(... ) below
 
 app.use(express.static(path.join(__dirname, "./client/build")));
+
+app.get("*", (req: any, res: any) => {
+  res.sendFile(path.join(__dirname + "./client/build/index.html"));
+});
 server.listen(PORT, () => console.log("App was started at port : " + PORT));
