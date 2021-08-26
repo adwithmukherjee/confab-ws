@@ -19,6 +19,6 @@ io.on("connection", sockets);
 app.use(express.static(path.join(__dirname, "./client/build")));
 
 app.get("*", (req: any, res: any) => {
-  res.sendFile(path.join(__dirname + "./client/build/index.html"));
+  res.sendFile(path.join(__dirname + "/client/build/index.html"));
 });
 server.listen(PORT, () => console.log("App was started at port : " + PORT));
