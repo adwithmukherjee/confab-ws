@@ -11,7 +11,7 @@ const loadGapiClient = (window) => {
 
       _gapi.client.init(keys.GAPI_CLIENT);
 
-      _gapi.client.load("auth2", () => console.log("loaded auth"));
+      // _gapi.client.load("auth2", () => console.log("loaded auth"));
     });
   };
   loadGoogleScript();

@@ -17,6 +17,7 @@ const keys = {
     clientId:
       "512932984647-e6k7abdu7lfdaqr0mmpokthiigre935h.apps.googleusercontent.com",
     apiKey: "AIzaSyALTluatJjb31Y5QbWEJSc32R9QV4qP0CA",
+
     scope: "https://www.googleapis.com/auth/userinfo.profile",
     //"ux_mode": 'redirect',
 
