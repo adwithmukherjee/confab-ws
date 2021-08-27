@@ -1,7 +1,18 @@
 const express = require("express");
+const admin = require("firebase-admin");
+const path = require("path");
+const serviceAccount = require("./secret/huddle-7dff8-firebase-adminsdk-vnj3n-05c2a68ad5.json");
 var cors = require("cors");
+const PORT = process.env.PORT || 8000;
+
 const app = express();
 app.use(cors());
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://huddle-7dff8.firebaseio.com",
+});
+
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, {
   cors: {
@@ -10,8 +21,6 @@ const io = require("socket.io")(server, {
   },
 });
 const sockets = require("./sockets")(io);
-const PORT = process.env.PORT || 8000;
-const path = require("path");
 
 io.on("connection", sockets);
 // In dev mode just hide hide app.uss(... ) below
