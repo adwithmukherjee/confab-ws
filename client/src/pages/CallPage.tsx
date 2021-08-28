@@ -194,13 +194,13 @@ const CallPage = () => {
       user: localUser && convertFromAgoraUser(localUser),
     });
     //socket.disconnect();
-    history.goBack();
+    history.push("/");
   };
 
   const getReplaced = () => {
     leave();
     //socket.disconnect();
-    history.goBack();
+    history.push("/");
   };
 
   console.log("AUDIO TRACK DEBUGGING");
