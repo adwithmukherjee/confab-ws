@@ -42,9 +42,7 @@ module.exports = function (io) { return function (socket) {
             if (email in channels[channel].users) {
                 //TELL THIS EXISTING USER TO LEAVE, First, save their profile info
                 var oldProfile = channels[channel].users[email].user.profile;
-                if (channels[channel].users[email].active) {
-                    io.to(channels[channel].users[email].socketId).emit(events.LEAVE_CHANNEL);
-                }
+                io.to(channels[channel].users[email].socketId).emit(events.LEAVE_CHANNEL);
                 var oldUserInfo = user.user;
                 var newUserInfo = __assign(__assign({}, oldUserInfo), { profile: oldProfile });
                 user = __assign(__assign({}, user), { user: newUserInfo });

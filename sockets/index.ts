@@ -57,11 +57,9 @@ module.exports = (io: Server) => (socket: Socket) => {
           //TELL THIS EXISTING USER TO LEAVE, First, save their profile info
           const oldProfile = channels[channel].users[email].user.profile;
 
-          if (channels[channel].users[email].active) {
-            io.to(channels[channel].users[email].socketId).emit(
-              events.LEAVE_CHANNEL
-            );
-          }
+          io.to(channels[channel].users[email].socketId).emit(
+            events.LEAVE_CHANNEL
+          );
 
           const oldUserInfo = user.user;
           const newUserInfo = { ...oldUserInfo, profile: oldProfile };
