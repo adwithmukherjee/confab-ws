@@ -80,15 +80,15 @@ const CallPage = () => {
     console.log("receiving");
     const localUser = localUserRef.current;
     const remoteAgoraUsers = remoteAgoraUsersRef.current;
-    // console.log(users);
+    console.log(users);
     // console.log(localUser);
-    console.log(remoteAgoraUsers);
+    //console.log(remoteAgoraUsers);
     // console.log(localAudioTrack);
     // console.log(localAudioTrackRef.current);
     // if (localUser) {
     //   setLocalUser({ ...localUser, audioTrack: localAudioTrackRef.current });
     // }
-    if (localUser && remoteAgoraUsers && remoteAgoraUsers.length > 0) {
+    if (localUser && remoteAgoraUsers) {
       const remoteUserList = users.map((remoteUser) => {
         const audioTrack = remoteAgoraUsers.find((val) => {
           return val.uid.toString() === remoteUser.uid;
@@ -112,17 +112,23 @@ const CallPage = () => {
     });
 
     socket.on(events.UPDATE_USER, setRemoteUserState);
+    socket.on(events.LEAVE_CHANNEL, getReplaced);
 
     return () => {
+      socket.emit(events.LEAVE_CHANNEL, {
+        channel,
+        user: localUser && convertFromAgoraUser(localUser),
+      });
       leave();
-      socket.emit(events.LEAVE_CHANNEL, { channel, user });
       socket.off(events.UPDATE_USER, setRemoteUserState);
-      socket.disconnect();
+      //socket.disconnect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     join(appid, channel, token);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -183,9 +189,18 @@ const CallPage = () => {
   const leaveMeeting = () => {
     //console.log("ass");
     leave();
-    socket.emit(events.LEAVE_CHANNEL, { channel, user });
-    socket.disconnect();
-    history.push(`/`);
+    socket.emit(events.LEAVE_CHANNEL, {
+      channel,
+      user: localUser && convertFromAgoraUser(localUser),
+    });
+    //socket.disconnect();
+    history.goBack();
+  };
+
+  const getReplaced = () => {
+    leave();
+    //socket.disconnect();
+    history.goBack();
   };
 
   console.log("AUDIO TRACK DEBUGGING");

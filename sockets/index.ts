@@ -1,3 +1,4 @@
+import { send } from "process";
 import { Server, Socket } from "socket.io";
 const events = require("../client/src/api/sockets/events.js");
 
@@ -52,6 +53,13 @@ module.exports = (io: Server) => (socket: Socket) => {
         //IF USER ALREADY IN CHANNEL
         if (email in channels[channel].users) {
           //TELL THIS EXISTING USER TO LEAVE
+          io.to(channels[channel].users[email].socketId).emit(
+            events.LEAVE_CHANNEL
+          );
+          channels[channel].users[email] = {
+            ...user,
+            socketId: socket.id,
+          };
         } else {
           //LOG THIS USERS SOCKET ID AND USER INFO
           channels[channel].users[email] = {
@@ -67,6 +75,8 @@ module.exports = (io: Server) => (socket: Socket) => {
           socketId: socket.id,
         };
       }
+      socket.data.channel = channel;
+      socket.data.user = email;
 
       sendUserData(channel);
     }
@@ -89,7 +99,38 @@ module.exports = (io: Server) => (socket: Socket) => {
       }
     }
   );
-  socket.on("disconnect", () => {});
+
+  socket.on(
+    events.LEAVE_CHANNEL,
+    ({ channel, user }: { channel: string; user: UserObject }) => {
+      console.log("LEAVING");
+      if (user && user.user && user.user.email in channels[channel].users) {
+        console.log("" + user.user.email + " leaving");
+        delete channels[channel].users[user.user.email];
+        sendUserData(channel);
+      }
+    }
+  );
+  socket.on("disconnecting", () => {
+    console.log("disconnecting");
+    const { channel, user }: { channel: string; user: string } = socket.data;
+    if (channel in channels && user in channels[channel].users) {
+      delete channels[channel].users[user];
+    }
+    sendUserData(channel);
+
+    // console.log(socket.data.channel);
+    // console.log(socket.data.user);
+    // //io.to(socket.id).emit(events.LEAVE_CHANNEL);
+    // console.log(socket.id);
+  });
+
+  socket.on("disconnected", () => {
+    console.log("disconnected");
+  });
+
+  socket.on("connect_error", (err) => console.log(err));
+  socket.on("connect_failed", (err) => console.log(err));
 
   function sendUserData(channel: string) {
     if (channels[channel]) {

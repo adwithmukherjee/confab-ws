@@ -41,6 +41,8 @@ module.exports = function (io) { return function (socket) {
             //IF USER ALREADY IN CHANNEL
             if (email in channels[channel].users) {
                 //TELL THIS EXISTING USER TO LEAVE
+                io.to(channels[channel].users[email].socketId).emit(events.LEAVE_CHANNEL);
+                channels[channel].users[email] = __assign(__assign({}, user), { socketId: socket.id });
             }
             else {
                 //LOG THIS USERS SOCKET ID AND USER INFO
@@ -52,6 +54,8 @@ module.exports = function (io) { return function (socket) {
             channels[channel] = { users: {} };
             channels[channel].users[email] = __assign(__assign({}, user), { socketId: socket.id });
         }
+        socket.data.channel = channel;
+        socket.data.user = email;
         sendUserData(channel);
     });
     socket.on(events.UPDATE_USER, function (_a) {
@@ -68,7 +72,32 @@ module.exports = function (io) { return function (socket) {
             }
         }
     });
-    socket.on("disconnect", function () { });
+    socket.on(events.LEAVE_CHANNEL, function (_a) {
+        var channel = _a.channel, user = _a.user;
+        console.log("LEAVING");
+        if (user && user.user && user.user.email in channels[channel].users) {
+            console.log("" + user.user.email + " leaving");
+            delete channels[channel].users[user.user.email];
+            sendUserData(channel);
+        }
+    });
+    socket.on("disconnecting", function () {
+        console.log("disconnecting");
+        var _a = socket.data, channel = _a.channel, user = _a.user;
+        if (channel in channels && user in channels[channel].users) {
+            delete channels[channel].users[user];
+        }
+        sendUserData(channel);
+        // console.log(socket.data.channel);
+        // console.log(socket.data.user);
+        // //io.to(socket.id).emit(events.LEAVE_CHANNEL);
+        // console.log(socket.id);
+    });
+    socket.on("disconnected", function () {
+        console.log("disconnected");
+    });
+    socket.on("connect_error", function (err) { return console.log(err); });
+    socket.on("connect_failed", function (err) { return console.log(err); });
     function sendUserData(channel) {
         if (channels[channel]) {
             var users_1 = channels[channel].users;
