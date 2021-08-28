@@ -18,7 +18,7 @@ import logo from "../assets/logo.svg";
 import heroImg from "../assets/hero-img.png";
 // import { addToWaitlist } from "../firebase";
 
-const WaitlistPage = ({ setLoggingIn }) => {
+const WaitlistPage = () => {
   const [success, setSuccess] = useState(undefined);
   const [email, setEmail] = useState("");
   const handleChange = (e) => {

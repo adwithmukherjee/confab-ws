@@ -1,11 +1,13 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
+import "firebase/compat/storage";
 import keys from "../keys";
 
 firebase.initializeApp(keys.FIREBASE_CONFIG);
 
 const auth = firebase.auth();
+const storage = firebase.storage();
 
 const getUser = (email) => {
   const user = new Promise((resolve, reject) => {
@@ -15,7 +17,7 @@ const getUser = (email) => {
       .doc(email)
       .get()
       .then((doc) => {
-        resolve(doc.data());
+        resolve({ ...doc.data(), email });
       })
       .catch(() => {
         resolve(undefined);
@@ -53,7 +55,7 @@ const signInWithGoogle = async () => {
               .doc(email)
               .get()
               .then((doc) => {
-                resolve(doc.data());
+                resolve({ ...doc.data(), email });
               });
           })
           .catch((err) => {
@@ -74,4 +76,78 @@ const signOut = async () => {
   await auth.signOut();
 };
 
-export { auth, getUser, signInWithGoogle, signOut };
+const createCall = () => {
+  const db = firebase.firestore();
+  const { email } = firebase.auth().currentUser;
+
+  const channel = new Promise((resolve, reject) => {
+    db.collection("meetings")
+      .add({
+        ended: false,
+        lastActive: new Date(),
+        creatorRef: db.doc("users/" + email),
+      })
+      .then((docRef) => {
+        db.collection("meetings")
+          .doc(docRef.id)
+          .collection("currentAttendees")
+          .doc(email)
+          .set({
+            isHost: true,
+          })
+          .then(() => {
+            resolve(docRef.id);
+          });
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+
+  return channel;
+};
+
+const getCalEventDetails = (channel) => {
+  const db = firebase.firestore().collection("meetings");
+
+  const meetingInfo = new Promise((resolve, reject) => {
+    db.doc(channel)
+      .get()
+      .then((doc) => {
+        const { gcal_event } = doc.data();
+        if (gcal_event) {
+          resolve(gcal_event);
+        } else {
+          resolve(undefined);
+        }
+      })
+      .catch(() => {
+        resolve(undefined);
+      });
+  });
+  return meetingInfo;
+};
+
+const updateUserPhotoURL = (photoURL) => {
+  const db = firebase.firestore();
+  const { email } = firebase.auth().currentUser;
+  if (photoURL && photoURL !== "") {
+    db.collection("users").doc(email).set(
+      {
+        photoURL,
+      },
+      { merge: true }
+    );
+  }
+};
+
+export {
+  auth,
+  storage,
+  getUser,
+  signInWithGoogle,
+  signOut,
+  createCall,
+  getCalEventDetails,
+  updateUserPhotoURL,
+};

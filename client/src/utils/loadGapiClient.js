@@ -4,7 +4,6 @@ import keys from "../keys";
 const loadGapiClient = (window) => {
   window.onGoogleScriptLoad = () => {
     const _gapi = window.gapi;
-    console.log(_gapi);
 
     _gapi.load("client", () => {
       console.log("loaded client");

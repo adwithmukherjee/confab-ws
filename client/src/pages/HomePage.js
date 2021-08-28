@@ -9,6 +9,7 @@ import phoneIcon from "../assets/phone-icon.png";
 import { Link, useHistory } from "react-router-dom";
 import titleImg from "../assets/title.svg";
 import { blue } from "@material-ui/core/colors";
+import { createCall } from "../api/firebase";
 
 const HomePage = () => {
   const history = useHistory();
@@ -16,10 +17,9 @@ const HomePage = () => {
   const [modalText, setModalText] = useState({ title: "", description: "" });
 
   function handleCreateRoom() {
-    // instantCreateFirestoreEvent().then((channel) => {
-    //   history.push(`/call/${channel}`);
-    // });
-    history.push("/call");
+    createCall().then((channel) => {
+      history.push(`/call/${channel}`);
+    });
   }
 
   function ConfabTitle({ style }) {

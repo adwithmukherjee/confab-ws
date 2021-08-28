@@ -1,4 +1,3 @@
-import io from "socket.io-client";
 import { useEffect, useState, useContext } from "react";
 import UserContext from "./context/UserContext";
 import { auth, getUser } from "./api/firebase";
@@ -17,28 +16,20 @@ import {
 import LoggedInPage from "./components/LoggedInPage";
 import HomePage from "./pages/HomePage";
 import WaitlistPage from "./pages/WaitlistPage";
-import Call from "./pages/Call";
+import CallPage from "./pages/CallPage";
 import SignInPage from "./pages/SignInPage";
 import loadGapiClient from "./utils/loadGapiClient";
 import "./App.css";
 
 function App() {
-  const socketURL =
-    process.env.NODE_ENV === "development" ? "http://localhost:8000" : "/";
-
-  const [user, setUser] = useState(undefined);
+  const [user, setUser] = useState<User | undefined>(undefined);
   const [loading, setLoading] = useState(false);
 
-  const globals = {
+  const globals: UserContextInterface = {
     user,
     setUser,
     loading,
     setLoading,
-  };
-
-  const initSocket = () => {
-    let socket = io(socketURL);
-    socket.on("connect", () => console.log("Connected"));
   };
 
   useEffect(() => {
@@ -64,10 +55,10 @@ function App() {
   });
 
   return (
-    <div style={{}}>
+    <div>
       <ThemeProvider theme={theme}>
         <UserContext.Provider value={globals}>
-          <Backdrop open={loading} style={{ zIndex: "100" }}>
+          <Backdrop open={loading} style={{ zIndex: 10 }}>
             <CircularProgress color="inherit" />
           </Backdrop>
           <Router>
@@ -88,7 +79,7 @@ function App() {
               {user ? <Redirect to="/" /> : <SignInPage />}
             </Route>
             <Route exact path="/call/:channelId">
-              <Call />
+              {user ? <CallPage /> : <SignInPage />}
             </Route>
           </Router>
         </UserContext.Provider>
@@ -97,4 +88,17 @@ function App() {
   );
 }
 
+export interface User {
+  displayName: string;
+  email: string;
+  photoURL: string;
+  profile: string;
+}
+
+export interface UserContextInterface {
+  user: User | undefined;
+  setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
 export default App;
