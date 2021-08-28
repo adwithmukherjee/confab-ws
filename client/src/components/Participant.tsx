@@ -33,6 +33,8 @@ const Participant = (props: ParticipantProps) => {
   // >();
   const [audio, setAudio] = useState<number>(0);
 
+  // console.log(props.user?.user.email);
+  // console.log(props.user?.audioTrack);
   useEffect(() => {
     const interval = setInterval(() => {
       // console.log(props.user);

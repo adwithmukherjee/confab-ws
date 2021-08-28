@@ -65,13 +65,24 @@ const CallPage = () => {
     )
   );
 
+  useEffect(() => {
+    if (localUser) {
+      console.log("emitting");
+      socket.emit(events.UPDATE_USER, {
+        channel,
+        user: convertFromAgoraUser(localUser),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [remoteAgoraUsers]);
+
   const setRemoteUserState = ({ users }: { users: UserObject[] }) => {
     console.log("receiving");
     const localUser = localUserRef.current;
     const remoteAgoraUsers = remoteAgoraUsersRef.current;
     // console.log(users);
     // console.log(localUser);
-    // console.log(remoteAgoraUsers);
+    console.log(remoteAgoraUsers);
     // console.log(localAudioTrack);
     // console.log(localAudioTrackRef.current);
     // if (localUser) {
@@ -141,7 +152,7 @@ const CallPage = () => {
 
   /*EVERY TIME LOCAL USER STATE CHANGES, EMIT TO WS CONNECTION*/
   useEffect(() => {
-    if (localUser && socket.connected) {
+    if (localUser) {
       console.log("emitting!");
       socket.emit(events.UPDATE_USER, {
         channel,
@@ -151,23 +162,23 @@ const CallPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localUser]);
 
-  useEffect(() => {
-    //let interval;
+  //   useEffect(() => {
+  //     //let interval;
 
-    const interval = setInterval(() => {
-      if (localUser) {
-        console.log("emitting");
-        socket.emit(events.UPDATE_USER, {
-          channel,
-          user: convertFromAgoraUser(localUser),
-        });
-      }
-    }, 1000);
+  //     const interval = setInterval(() => {
+  //       if (localUser) {
+  //         console.log("emitting");
+  //         socket.emit(events.UPDATE_USER, {
+  //           channel,
+  //           user: convertFromAgoraUser(localUser),
+  //         });
+  //       }
+  //     }, 1000);
 
-    return () => clearInterval(interval);
+  //     return () => clearInterval(interval);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  //     // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   }, []);
 
   const leaveMeeting = () => {
     //console.log("ass");
@@ -177,7 +188,8 @@ const CallPage = () => {
     history.push(`/`);
   };
 
-  console.log(localUser?.audioTrack);
+  console.log("AUDIO TRACK DEBUGGING");
+  console.log(localUser);
   console.log(remoteUsers);
 
   return localUser ? (

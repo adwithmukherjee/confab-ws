@@ -268,6 +268,7 @@ const Call = (props: CallProps) => {
   }, [localUser?.muted, localAudioTrack]);
 
   //console.log(selectedUser);
+  console.log("in CALL");
 
   return localUser ? (
     <div>

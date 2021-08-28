@@ -6,7 +6,7 @@ import UserContext from "../context/UserContext";
 import { useHistory } from "react-router-dom";
 
 function LoggedInUI({ children }) {
-  const { user, setUser, leave } = React.useContext(UserContext);
+  const { user, setUser } = React.useContext(UserContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {

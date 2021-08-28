@@ -26,6 +26,9 @@ const getGridTemplateColumns = (numberOfParticipants: number): string => {
 const Participants = (props: ParticipantsProps) => {
   const me = props.me;
   const users = props.users;
+
+  // console.log(me);
+  // console.log(users);
   const classes = useStyles();
   const meParticipant = 1;
   const addParticipant = 1;
