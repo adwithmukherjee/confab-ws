@@ -112,6 +112,7 @@ const Call = (props: CallProps) => {
     setLocalUser,
     remoteUsers,
   } = props;
+
   const playSound = () => {
     const audioElement = document.getElementsByClassName(
       "audio"
@@ -126,6 +127,7 @@ const Call = (props: CallProps) => {
   const [calendarEvent, setCalendarEvent] = useState<any>(undefined);
   useEffect(() => {
     getCalEventDetails().then((event) => {
+      console.log(event);
       if (event) {
         setCalendarEvent(event);
       }
@@ -225,26 +227,27 @@ const Call = (props: CallProps) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
   useEffect(() => {
-    const html = "";
+    const html = localUser.user.profile;
     const content = ContentState.createFromBlockArray(
       htmlToDraft(html).contentBlocks
     );
     setEditorState(EditorState.createWithContent(content));
   }, []);
 
-  // useEffect(() => {
-  //   //get profile for first time on load
-  //   const profileHTML = draftToHtml(
-  //     convertToRaw(editorState.getCurrentContent())
-  //   );
+  useEffect(() => {
+    //get profile for first time on load
+    const profileHTML = draftToHtml(
+      convertToRaw(editorState.getCurrentContent())
+    );
 
-  //   setLocalUser((localUser: AgoraUserObject | undefined) => {
-  //     if (localUser) {
-  //       const { profile, ...user } = localUser?.user;
-  //       return { ...localUser, user: { ...user, profile: profileHTML } };
-  //     }
-  //   });
-  // }, [editorState]);
+    setLocalUser((localUser: AgoraUserObject | undefined) => {
+      if (localUser) {
+        const { profile, ...user } = localUser?.user;
+        return { ...localUser, user: { ...user, profile: profileHTML } };
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editorState]);
 
   /////MUTE/////
   const handleMute = () => {
@@ -266,9 +269,6 @@ const Call = (props: CallProps) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localUser?.muted, localAudioTrack]);
-
-  //console.log(selectedUser);
-  console.log("in CALL");
 
   return localUser ? (
     <div>

@@ -1,7 +1,7 @@
 /* match body instead of * so we let everything inherit by default, override if desired */
-body {
+/* body {
   font-family: "Inter", sans-serif;
-}
+} */
 
 .enableBlur > * {
   filter: blur(3px);

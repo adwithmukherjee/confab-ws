@@ -8,6 +8,7 @@ import UserContext from "../context/UserContext";
 import Call, { AgoraUserObject, UserObject } from "../components/Call";
 import { socket } from "../api/sockets/sockets";
 import events from "../api/sockets/events";
+import Loading from "../components/Loading";
 
 const client = AgoraRTC.createClient({ codec: "h264", mode: "rtc" });
 
@@ -27,9 +28,12 @@ const CallPage = () => {
     }
   };
 
+  const [joinedOnce, setJoinedOnce] = useState(false);
+
   const [localUser, setLocalUser] = useState<AgoraUserObject | undefined>(
     undefined
   );
+
   const [remoteUsers, setRemoteUsers] = useState<AgoraUserObject[]>([]);
 
   const {
@@ -45,6 +49,7 @@ const CallPage = () => {
   const remoteAgoraUsersRef = useRef(remoteAgoraUsers);
 
   useEffect(() => {
+    localAudioTrackRef.current = localAudioTrack;
     localUserRef.current = localUser;
     remoteAgoraUsersRef.current = remoteAgoraUsers;
   });
@@ -113,6 +118,14 @@ const CallPage = () => {
 
     socket.on(events.UPDATE_USER, setRemoteUserState);
     socket.on(events.LEAVE_CHANNEL, getReplaced);
+    socket.on(events.JOIN_CHANNEL, ({ user }: { user: UserObject }) => {
+      console.log(user);
+      setLocalUser({
+        ...user,
+        audioTrack: localAudioTrackRef.current,
+      });
+      setJoinedOnce(true);
+    });
 
     return () => {
       socket.emit(events.LEAVE_CHANNEL, {
@@ -141,13 +154,15 @@ const CallPage = () => {
         uid: client.uid?.toString(),
       };
       socket.emit(events.JOIN_CHANNEL, { channel, user: tmpUser });
-      setLocalUser({
-        user,
-        isHost: false,
-        muted: false,
-        audioTrack: localAudioTrack,
-        uid: client.uid?.toString(),
-      });
+      // setJoinedOnce(true);
+      console.log();
+      // setLocalUser({
+      //   user,
+      //   isHost: false,
+      //   muted: false,
+      //   audioTrack: localAudioTrack,
+      //   uid: client.uid?.toString(),
+      // });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [joinState, user]);
@@ -158,7 +173,8 @@ const CallPage = () => {
 
   /*EVERY TIME LOCAL USER STATE CHANGES, EMIT TO WS CONNECTION*/
   useEffect(() => {
-    if (localUser) {
+    if (localUser && joinedOnce) {
+      console.log(localUser);
       console.log("emitting!");
       socket.emit(events.UPDATE_USER, {
         channel,
@@ -217,7 +233,7 @@ const CallPage = () => {
       setLocalUser={setLocalUser}
     />
   ) : (
-    <div> Loading </div>
+    <Loading />
   );
 };
 

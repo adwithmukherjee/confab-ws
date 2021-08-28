@@ -1,3 +1,4 @@
+import { userInfo } from "os";
 import { send } from "process";
 import { Server, Socket } from "socket.io";
 const events = require("../client/src/api/sockets/events.js");
@@ -20,6 +21,7 @@ interface UserObject {
 
 interface SocketUserObject {
   socketId: string;
+  active: boolean;
   isHost: boolean;
   muted: boolean;
   uid: string;
@@ -32,7 +34,7 @@ interface SocketUserObject {
 }
 
 function convertFromSocketUser(user: SocketUserObject): UserObject {
-  const { socketId, ...rest } = user;
+  const { socketId, active, ...rest } = user;
   return rest;
 }
 
@@ -52,18 +54,29 @@ module.exports = (io: Server) => (socket: Socket) => {
       if (channel in channels) {
         //IF USER ALREADY IN CHANNEL
         if (email in channels[channel].users) {
-          //TELL THIS EXISTING USER TO LEAVE
-          io.to(channels[channel].users[email].socketId).emit(
-            events.LEAVE_CHANNEL
-          );
+          //TELL THIS EXISTING USER TO LEAVE, First, save their profile info
+          const oldProfile = channels[channel].users[email].user.profile;
+
+          if (channels[channel].users[email].active) {
+            io.to(channels[channel].users[email].socketId).emit(
+              events.LEAVE_CHANNEL
+            );
+          }
+
+          const oldUserInfo = user.user;
+          const newUserInfo = { ...oldUserInfo, profile: oldProfile };
+          user = { ...user, user: newUserInfo };
+          console.log(user);
           channels[channel].users[email] = {
             ...user,
             socketId: socket.id,
+            active: true,
           };
         } else {
           //LOG THIS USERS SOCKET ID AND USER INFO
           channels[channel].users[email] = {
             ...user,
+            active: true,
             socketId: socket.id,
           };
         } //IF CHANNEL DOES NOT EXIST
@@ -72,11 +85,16 @@ module.exports = (io: Server) => (socket: Socket) => {
         channels[channel] = { users: {} };
         channels[channel].users[email] = {
           ...user,
+          active: true,
           socketId: socket.id,
         };
       }
       socket.data.channel = channel;
       socket.data.user = email;
+
+      io.to(socket.id).emit(events.JOIN_CHANNEL, {
+        user: convertFromSocketUser(channels[channel].users[email]),
+      });
 
       sendUserData(channel);
     }
@@ -85,10 +103,15 @@ module.exports = (io: Server) => (socket: Socket) => {
   socket.on(
     events.UPDATE_USER,
     ({ channel, user }: { channel: string; user: UserObject }) => {
+      console.log("UPDATE");
       const email = user.user.email;
       if (channels[channel]) {
         if (email in channels[channel].users) {
-          channels[channel].users[email] = { ...user, socketId: socket.id };
+          channels[channel].users[email] = {
+            ...user,
+            active: true,
+            socketId: socket.id,
+          };
 
           console.log("sending updated channel " + channel + " users: ");
 
@@ -106,7 +129,8 @@ module.exports = (io: Server) => (socket: Socket) => {
       console.log("LEAVING");
       if (user && user.user && user.user.email in channels[channel].users) {
         console.log("" + user.user.email + " leaving");
-        delete channels[channel].users[user.user.email];
+        channels[channel].users[user.user.email].active = false;
+        // delete channels[channel].users[user.user.email];
         sendUserData(channel);
       }
     }
@@ -115,7 +139,7 @@ module.exports = (io: Server) => (socket: Socket) => {
     console.log("disconnecting");
     const { channel, user }: { channel: string; user: string } = socket.data;
     if (channel in channels && user in channels[channel].users) {
-      delete channels[channel].users[user];
+      channels[channel].users[user].active = false;
     }
     sendUserData(channel);
 
@@ -135,9 +159,13 @@ module.exports = (io: Server) => (socket: Socket) => {
   function sendUserData(channel: string) {
     if (channels[channel]) {
       const users = channels[channel].users;
-      var values = Object.keys(users).map(function (key) {
-        return convertFromSocketUser(users[key]);
-      });
+      var values = Object.keys(users)
+        .filter((val) => {
+          return users[val].active;
+        })
+        .map(function (key) {
+          return convertFromSocketUser(users[key]);
+        });
 
       console.log(values);
 

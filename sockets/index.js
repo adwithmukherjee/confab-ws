@@ -25,7 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var events = require("../client/src/api/sockets/events.js");
 var channels = {}; //CHANNEL IDs => CHANNEL DATA
 function convertFromSocketUser(user) {
-    var socketId = user.socketId, rest = __rest(user, ["socketId"]);
+    var socketId = user.socketId, active = user.active, rest = __rest(user, ["socketId", "active"]);
     return rest;
 }
 module.exports = function (io) { return function (socket) {
@@ -40,30 +40,41 @@ module.exports = function (io) { return function (socket) {
         if (channel in channels) {
             //IF USER ALREADY IN CHANNEL
             if (email in channels[channel].users) {
-                //TELL THIS EXISTING USER TO LEAVE
-                io.to(channels[channel].users[email].socketId).emit(events.LEAVE_CHANNEL);
-                channels[channel].users[email] = __assign(__assign({}, user), { socketId: socket.id });
+                //TELL THIS EXISTING USER TO LEAVE, First, save their profile info
+                var oldProfile = channels[channel].users[email].user.profile;
+                if (channels[channel].users[email].active) {
+                    io.to(channels[channel].users[email].socketId).emit(events.LEAVE_CHANNEL);
+                }
+                var oldUserInfo = user.user;
+                var newUserInfo = __assign(__assign({}, oldUserInfo), { profile: oldProfile });
+                user = __assign(__assign({}, user), { user: newUserInfo });
+                console.log(user);
+                channels[channel].users[email] = __assign(__assign({}, user), { socketId: socket.id, active: true });
             }
             else {
                 //LOG THIS USERS SOCKET ID AND USER INFO
-                channels[channel].users[email] = __assign(__assign({}, user), { socketId: socket.id });
+                channels[channel].users[email] = __assign(__assign({}, user), { active: true, socketId: socket.id });
             } //IF CHANNEL DOES NOT EXIST
         }
         else {
             //CREATE CHANNEL RECORD AND ADD USER TO IT
             channels[channel] = { users: {} };
-            channels[channel].users[email] = __assign(__assign({}, user), { socketId: socket.id });
+            channels[channel].users[email] = __assign(__assign({}, user), { active: true, socketId: socket.id });
         }
         socket.data.channel = channel;
         socket.data.user = email;
+        io.to(socket.id).emit(events.JOIN_CHANNEL, {
+            user: convertFromSocketUser(channels[channel].users[email]),
+        });
         sendUserData(channel);
     });
     socket.on(events.UPDATE_USER, function (_a) {
         var channel = _a.channel, user = _a.user;
+        console.log("UPDATE");
         var email = user.user.email;
         if (channels[channel]) {
             if (email in channels[channel].users) {
-                channels[channel].users[email] = __assign(__assign({}, user), { socketId: socket.id });
+                channels[channel].users[email] = __assign(__assign({}, user), { active: true, socketId: socket.id });
                 console.log("sending updated channel " + channel + " users: ");
                 sendUserData(channel);
             }
@@ -77,7 +88,8 @@ module.exports = function (io) { return function (socket) {
         console.log("LEAVING");
         if (user && user.user && user.user.email in channels[channel].users) {
             console.log("" + user.user.email + " leaving");
-            delete channels[channel].users[user.user.email];
+            channels[channel].users[user.user.email].active = false;
+            // delete channels[channel].users[user.user.email];
             sendUserData(channel);
         }
     });
@@ -85,7 +97,7 @@ module.exports = function (io) { return function (socket) {
         console.log("disconnecting");
         var _a = socket.data, channel = _a.channel, user = _a.user;
         if (channel in channels && user in channels[channel].users) {
-            delete channels[channel].users[user];
+            channels[channel].users[user].active = false;
         }
         sendUserData(channel);
         // console.log(socket.data.channel);
@@ -101,7 +113,11 @@ module.exports = function (io) { return function (socket) {
     function sendUserData(channel) {
         if (channels[channel]) {
             var users_1 = channels[channel].users;
-            var values = Object.keys(users_1).map(function (key) {
+            var values = Object.keys(users_1)
+                .filter(function (val) {
+                return users_1[val].active;
+            })
+                .map(function (key) {
                 return convertFromSocketUser(users_1[key]);
             });
             console.log(values);

@@ -20,10 +20,11 @@ import CallPage from "./pages/CallPage";
 import SignInPage from "./pages/SignInPage";
 import loadGapiClient from "./utils/loadGapiClient";
 import "./App.css";
+import Loading from "./components/Loading";
 
 function App() {
   const [user, setUser] = useState<User | undefined>(undefined);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const globals: UserContextInterface = {
     user,
@@ -44,12 +45,14 @@ function App() {
           setUser(user);
         });
       }
+      setLoading(false);
     });
   }, []);
 
   const theme = createTheme({
     typography: {
       // override Material UI default of Roboto
+      //fontFamily: '"Roboto", sans-serif',
       fontFamily: '"Inter", sans-serif',
     },
   });
@@ -58,30 +61,31 @@ function App() {
     <div>
       <ThemeProvider theme={theme}>
         <UserContext.Provider value={globals}>
-          <Backdrop open={loading} style={{ zIndex: 10 }}>
-            <CircularProgress color="inherit" />
-          </Backdrop>
-          <Router>
-            <Route
-              exact
-              path="/"
-              render={(props) =>
-                user ? (
-                  <LoggedInPage>
-                    <HomePage />
-                  </LoggedInPage>
-                ) : (
-                  <WaitlistPage />
-                )
-              }
-            />
-            <Route exact path="/login">
-              {user ? <Redirect to="/" /> : <SignInPage />}
-            </Route>
-            <Route exact path="/call/:channelId">
-              {user ? <CallPage /> : <SignInPage />}
-            </Route>
-          </Router>
+          {loading ? (
+            <Loading />
+          ) : (
+            <Router>
+              <Route
+                exact
+                path="/"
+                render={(props) =>
+                  user ? (
+                    <LoggedInPage>
+                      <HomePage />
+                    </LoggedInPage>
+                  ) : (
+                    <WaitlistPage />
+                  )
+                }
+              />
+              <Route exact path="/login">
+                {user ? <Redirect to="/" /> : <SignInPage />}
+              </Route>
+              <Route exact path="/call/:channelId">
+                {user ? <CallPage /> : <SignInPage />}
+              </Route>
+            </Router>
+          )}
         </UserContext.Provider>
       </ThemeProvider>
     </div>
