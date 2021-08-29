@@ -18,7 +18,7 @@ const QRCodeDisplay = (props: QRCodeDisplayProps) => {
           <Paper elevation={3} className={classes.qrCodeStyle}>
             <QRCode
               style={{ width: "100%", height: "100%" }}
-              value={`https://confab.bigmesslabs.com/call/${props.channel}`}
+              value={`https://immense-beach-14785.herokuapp.com/call/${props.channel}`}
             />
           </Paper>
           <div
