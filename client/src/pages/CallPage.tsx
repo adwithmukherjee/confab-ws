@@ -90,9 +90,6 @@ const CallPage = () => {
     //console.log(remoteAgoraUsers);
     // console.log(localAudioTrack);
     // console.log(localAudioTrackRef.current);
-    // if (localUser) {
-    //   setLocalUser({ ...localUser, audioTrack: localAudioTrackRef.current });
-    // }
     if (localUser && remoteAgoraUsers) {
       const remoteUserList = users.map((remoteUser) => {
         const audioTrack = remoteAgoraUsers.find((val) => {
@@ -128,12 +125,14 @@ const CallPage = () => {
     });
 
     return () => {
-      socket.emit(events.LEAVE_CHANNEL, {
-        channel,
-        user: localUser && convertFromAgoraUser(localUser),
+      leave().then(() => {
+        socket.emit(events.LEAVE_CHANNEL, {
+          channel,
+          user: localUser && convertFromAgoraUser(localUser),
+        });
+        socket.off(events.UPDATE_USER, setRemoteUserState);
       });
-      leave();
-      socket.off(events.UPDATE_USER, setRemoteUserState);
+
       //socket.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -184,27 +183,27 @@ const CallPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localUser]);
 
-  //   useEffect(() => {
-  //     //let interval;
+  useEffect(() => {
+    const refresh = () => {
+      console.log("ass");
+      if (localUser?.audioTrack === undefined && joinedOnce && localUser) {
+        leave().then(() => {
+          join(appid, channel, token).then(() => {
+            setLocalUser({
+              ...localUser,
+              audioTrack: localAudioTrackRef.current,
+            });
+          });
+        });
+      }
+    };
+    refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [localUser?.audioTrack]);
 
-  //     const interval = setInterval(() => {
-  //       if (localUser) {
-  //         console.log("emitting");
-  //         socket.emit(events.UPDATE_USER, {
-  //           channel,
-  //           user: convertFromAgoraUser(localUser),
-  //         });
-  //       }
-  //     }, 1000);
-
-  //     return () => clearInterval(interval);
-
-  //     // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   }, []);
-
-  const leaveMeeting = () => {
+  const leaveMeeting = async () => {
     //console.log("ass");
-    leave();
+    await leave();
     socket.emit(events.LEAVE_CHANNEL, {
       channel,
       user: localUser && convertFromAgoraUser(localUser),
@@ -213,8 +212,8 @@ const CallPage = () => {
     history.push("/");
   };
 
-  const getReplaced = () => {
-    leave();
+  const getReplaced = async () => {
+    await leave();
     //socket.disconnect();
     history.push("/");
   };

@@ -17,7 +17,7 @@ export default function useAgora(
   localAudioTrack: ILocalAudioTrack | undefined;
   // localVideoTrack: ILocalVideoTrack | undefined,
   joinState: boolean;
-  leave: Function;
+  leave: () => Promise<void>;
   join: Function;
   remoteUsers: IAgoraRTCRemoteUser[];
 } {

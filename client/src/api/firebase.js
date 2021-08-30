@@ -34,6 +34,8 @@ const signInWithGoogle = async () => {
 
   const credential = firebase.auth.GoogleAuthProvider.credential(token);
 
+  let userRecord = {};
+
   const user = new Promise((resolve, reject) => {
     firebase
       .auth()
@@ -47,7 +49,8 @@ const signInWithGoogle = async () => {
           .auth()
           .signInWithCredential(credential)
           .then(({ user }) => {
-            const { email } = user;
+            const { email, displayName, photoURL } = user;
+            userRecord = { displayName, profile: "", photoURL };
 
             firebase
               .firestore()
@@ -55,7 +58,18 @@ const signInWithGoogle = async () => {
               .doc(email)
               .get()
               .then((doc) => {
-                resolve({ ...doc.data(), email });
+                if (doc.exists) {
+                  resolve({ ...doc.data(), email });
+                } else {
+                  firebase
+                    .firestore()
+                    .collection("users")
+                    .doc(email)
+                    .set(userRecord)
+                    .then(() => {
+                      resolve({ ...userRecord, email });
+                    });
+                }
               });
           })
           .catch((err) => {
@@ -83,8 +97,8 @@ const createCall = () => {
   const channel = new Promise((resolve, reject) => {
     db.collection("meetings")
       .add({
-        ended: false,
-        lastActive: new Date(),
+        // ended: false,
+        // lastActive: new Date(),
         creatorRef: db.doc("users/" + email),
       })
       .then((docRef) => {
