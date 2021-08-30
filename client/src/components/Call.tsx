@@ -606,7 +606,7 @@ const Call = (props: CallProps) => {
               />
             </div>
 
-            <QRCodeDisplay channel={channel} />
+            {!isMobile && <QRCodeDisplay channel={channel} />}
           </div>
           {/* <div style={{ display: "flex", height: "100px", width: "100%" }}></div> */}
           <div
