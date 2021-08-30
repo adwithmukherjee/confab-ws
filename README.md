@@ -1,14 +1,26 @@
 # confab-ws
 
-##Running locally:
+React App housed in `client/`
 
-To run server: in root directory, run `npm run dev`
-To run client: `cd client` then `npm start` in client directory
+Express server housed in `/`
 
+## Running locally
 
-##To deploy
+To run server and client together: in root directory, `npm run dev`
+
+To run server by itself: in root directory, `npm run build` then `npm start`
+
+To run client by itself: in root directory, `npm run client`
+
+## To deploy
+
+First, `cd client` and `npm run build`
+
+Then, in root directory,
 
 `git add .`
+
 `git commit -m "something"`
+
 `git push heroku main`
 
