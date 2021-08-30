@@ -100,10 +100,7 @@ const CallPage = () => {
 
       setRemoteUsers(
         remoteUserList.filter((remoteUser) => {
-          return (
-            remoteUser.user.email !== localUser.user.email &&
-            remoteUser.audioTrack
-          );
+          return remoteUser.user.email !== localUser.user.email;
         })
       );
     } else {
