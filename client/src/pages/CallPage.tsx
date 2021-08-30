@@ -225,6 +225,7 @@ const CallPage = () => {
   console.log("AUDIO TRACK DEBUGGING");
   console.log(localUser);
   console.log(remoteUsers);
+  console.log(remoteAgoraUsers);
 
   return localUser ? (
     <Call
