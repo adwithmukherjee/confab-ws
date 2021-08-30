@@ -303,8 +303,9 @@ function ConfabTitle({ style }) {
     <img
       src={titleImg}
       style={{
-        maxWidth: isMobile ? "100%" : "100%",
+        maxWidth: isMobile ? "95%" : "100%",
         margin: "auto",
+
         //transform: isMobile ? "translate(-10%)" : "none",
         ...style,
       }}
@@ -315,16 +316,18 @@ function ConfabTitle({ style }) {
 
 export function ConfabTitleWithTagline({ titleStyle }) {
   return (
-    <Typography
-      variant="h1"
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <ConfabTitle style={titleStyle} />
+    <div>
+      <Typography
+        variant="h1"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <ConfabTitle style={titleStyle} />
+      </Typography>
       <Typography
         variant="h5"
         style={{
@@ -335,8 +338,8 @@ export function ConfabTitleWithTagline({ titleStyle }) {
           fontSize: isMobile ? 15 : 25,
         }}
       >
-        Work at the speed of sound
+        Work at the speed of sound {isMobile ? "(mobile)" : "(desktop)"}
       </Typography>
-    </Typography>
+    </div>
   );
 }

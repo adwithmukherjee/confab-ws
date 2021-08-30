@@ -10,6 +10,7 @@ import { Link, useHistory } from "react-router-dom";
 import titleImg from "../assets/title.svg";
 import { blue } from "@material-ui/core/colors";
 import { createCall } from "../api/firebase";
+import { ConfabTitleWithTagline } from "./WaitlistPage";
 
 const HomePage = () => {
   const history = useHistory();
@@ -22,27 +23,12 @@ const HomePage = () => {
     });
   }
 
-  function ConfabTitle({ style }) {
-    /* TODO: why is this h1 not rendering as bold as it should be? issue with font file / font-face? */
-    return (
-      <img
-        src={titleImg}
-        style={{
-          maxWidth: isMobile ? "80%" : "100%",
-          // transform: isMobile ? "translate(-10%)" : "none",
-          ...style,
-        }}
-        alt="CONFAB"
-      />
-    );
-  }
-
   const classes = useStyles();
 
   return (
     <div className="landing-container-1">
       <div className={classes.root}>
-        <ConfabTitle />
+        <ConfabTitleWithTagline />
 
         <div className={classes.buttonGroup}>
           <div className={classes.buttons}>

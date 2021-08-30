@@ -1,39 +1,16 @@
-import React, {
-  useState,
-  useEffect,
-  useContext,
-  MouseEventHandler,
-  useRef,
-} from "react";
+import React, { useState, useEffect } from "react";
 import AgoraRTC, {
-  IAgoraRTCRemoteUser,
   ILocalAudioTrack,
   IRemoteAudioTrack,
 } from "agora-rtc-sdk-ng";
-import UserContext from "../context/UserContext";
-import useAgora from "../hooks/useAgora";
-import MediaPlayer from "./MediaPlayer";
+
 import QRCodeDisplay from "./QRCodeDisplay";
 import { isMobile } from "react-device-detect";
-import { useParams, useHistory, Prompt } from "react-router-dom";
-import { RtmTokenBuilder, RtcRole, RtcTokenBuilder } from "agora-access-token";
-import keys from "../keys";
-import { socket } from "../api/sockets/sockets";
-import events from "../api/sockets/events";
 import { makeStyles } from "@material-ui/core/styles";
-import QRCode from "qrcode.react";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
-import {
-  CircularProgress,
-  IconButton,
-  SnackbarContent,
-} from "@material-ui/core";
-import {
-  AiOutlineAudioMuted,
-  AiFillCamera,
-  AiOutlinePlusCircle,
-} from "react-icons/ai";
+import { IconButton, SnackbarContent } from "@material-ui/core";
+import { AiFillCamera } from "react-icons/ai";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import "./bottomsheetStyle.css";
 import {
@@ -45,7 +22,7 @@ import {
 import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
 import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
+
 import htmlToDraft from "html-to-draftjs";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import Participants from "./Participants";

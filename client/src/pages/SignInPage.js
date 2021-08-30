@@ -30,7 +30,7 @@ const SignInPage = () => {
         className="landing-container-2"
         style={{
           height: isMobile ? "80vh" : "70vh",
-
+          alignItems: "center",
           width: isMobile ? "95%" : "60%",
         }}
       >
