@@ -12,11 +12,23 @@ import { blue } from "@material-ui/core/colors";
 
 const SignInPage = () => {
   const { setUser, setLoading } = useContext(UserContext);
+  const history = useHistory();
 
   const signIn = () => {
+    console.log("Signing In");
     signInWithGoogle().then((user) => {
-      console.log(user);
-      setUser(user);
+      if (user.newUser) {
+        console.log("create pages");
+        setLoading(true);
+        setUser(user.user);
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
+
+        history.push("/create");
+      } else {
+        setUser(user.user);
+      }
     });
   };
 

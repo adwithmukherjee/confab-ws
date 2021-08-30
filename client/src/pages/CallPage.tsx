@@ -183,23 +183,24 @@ const CallPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localUser]);
 
-  // useEffect(() => {
-  //   const refresh = () => {
-  //     console.log("ass");
-  //     if (localUser?.audioTrack === undefined && joinedOnce && localUser) {
-  //       leave().then(() => {
-  //         join(appid, channel, token).then(() => {
-  //           setLocalUser({
-  //             ...localUser,
-  //             audioTrack: localAudioTrackRef.current,
-  //           });
-  //         });
-  //       });
-  //     }
-  //   };
-  //   refresh();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [localUser?.audioTrack]);
+  useEffect(() => {
+    const refresh = () => {
+      console.log("ass");
+      if (localUser?.audioTrack === undefined && joinedOnce && localUser) {
+        console.log("rejoining");
+        leave().then(() => {
+          join(appid, channel, token).then(() => {
+            setLocalUser({
+              ...localUser,
+              audioTrack: localAudioTrackRef.current,
+            });
+          });
+        });
+      }
+    };
+    refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [localUser?.audioTrack]);
 
   const leaveMeeting = async () => {
     //console.log("ass");

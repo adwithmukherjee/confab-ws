@@ -59,7 +59,8 @@ const signInWithGoogle = async () => {
               .get()
               .then((doc) => {
                 if (doc.exists) {
-                  resolve({ ...doc.data(), email });
+                  const val = { ...doc.data(), email };
+                  resolve({ newUser: false, user: val });
                 } else {
                   firebase
                     .firestore()
@@ -67,7 +68,8 @@ const signInWithGoogle = async () => {
                     .doc(email)
                     .set(userRecord)
                     .then(() => {
-                      resolve({ ...userRecord, email });
+                      const val = { ...userRecord, email };
+                      resolve({ newUser: true, user: val });
                     });
                 }
               });
@@ -155,6 +157,19 @@ const updateUserPhotoURL = (photoURL) => {
   }
 };
 
+const updateUserDisplayName = (displayName) => {
+  const db = firebase.firestore();
+  const { email } = firebase.auth().currentUser;
+  if (displayName && displayName !== "") {
+    db.collection("users").doc(email).set(
+      {
+        displayName,
+      },
+      { merge: true }
+    );
+  }
+};
+
 export {
   auth,
   storage,
@@ -164,4 +179,5 @@ export {
   createCall,
   getCalEventDetails,
   updateUserPhotoURL,
+  updateUserDisplayName,
 };

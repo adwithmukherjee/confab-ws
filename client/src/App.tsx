@@ -21,6 +21,7 @@ import SignInPage from "./pages/SignInPage";
 import loadGapiClient from "./utils/loadGapiClient";
 import "./App.css";
 import Loading from "./components/Loading";
+import CreateProfilePage from "./pages/CreateProfilePage";
 
 function App() {
   const [user, setUser] = useState<User | undefined>(undefined);
@@ -78,6 +79,9 @@ function App() {
                   )
                 }
               />
+              <Route exact path="/create">
+                {user ? <CreateProfilePage /> : <SignInPage />}
+              </Route>
               <Route exact path="/login">
                 {user ? <Redirect to="/" /> : <SignInPage />}
               </Route>
