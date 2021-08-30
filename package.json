@@ -7,13 +7,15 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "build": "tsc --project ./",
-    "dev": "ts-node-dev --respawn --pretty --transpile-only index.ts"
+    "client": "npm start --prefix client",
+    "dev": "npm run build & ts-node-dev --respawn --pretty --transpile-only index.ts & npm run client"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "agora-access-token": "^2.0.4",
     "agora-rtc-sdk-ng": "^4.6.3",
+    "concurrently": "^6.2.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "firebase-admin": "^9.11.1",
