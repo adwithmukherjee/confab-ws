@@ -11,16 +11,14 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { isMobile } from "react-device-detect";
 import titleImg from "../assets/title.svg";
-import { useHistory } from "react-router-dom";
 
 const CreateProfilePage = () => {
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser, setNewUser } = useContext(UserContext);
 
   const [image, setImage] = useState(null);
   const [imageURL, setImageURL] = useState(user.photoURL);
   const [progress, setProgress] = useState(0);
   const [displayName, setDisplayName] = useState(user.displayName);
-  const history = useHistory();
 
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -42,7 +40,7 @@ const CreateProfilePage = () => {
     if (image) {
       uploadImage();
     } else {
-      history.push("/");
+      setNewUser(false);
     }
 
     //setIsNewUser(false)
@@ -61,7 +59,7 @@ const CreateProfilePage = () => {
           return { ...user, photoURL: url };
         });
         updateUserPhotoURL(url);
-        history.push("/");
+        setNewUser(false);
       });
     });
   };

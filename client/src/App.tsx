@@ -25,11 +25,14 @@ import CreateProfilePage from "./pages/CreateProfilePage";
 
 function App() {
   const [user, setUser] = useState<User | undefined>(undefined);
+  const [newUser, setNewUser] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const globals: UserContextInterface = {
     user,
     setUser,
+    newUser,
+    setNewUser,
     loading,
     setLoading,
   };
@@ -70,7 +73,9 @@ function App() {
                 exact
                 path="/"
                 render={(props) =>
-                  user ? (
+                  newUser ? (
+                    <CreateProfilePage />
+                  ) : user ? (
                     <LoggedInPage>
                       <HomePage />
                     </LoggedInPage>
@@ -79,14 +84,17 @@ function App() {
                   )
                 }
               />
-              <Route exact path="/create">
-                {user ? <CreateProfilePage /> : <SignInPage />}
-              </Route>
               <Route exact path="/login">
                 {user ? <Redirect to="/" /> : <SignInPage />}
               </Route>
               <Route exact path="/call/:channelId">
-                {user ? <CallPage /> : <SignInPage />}
+                {newUser ? (
+                  <CreateProfilePage />
+                ) : user ? (
+                  <CallPage />
+                ) : (
+                  <SignInPage />
+                )}
               </Route>
             </Router>
           )}
@@ -106,6 +114,8 @@ export interface User {
 export interface UserContextInterface {
   user: User | undefined;
   setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
+  newUser: boolean;
+  setNewUser: React.Dispatch<React.SetStateAction<boolean>>;
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }

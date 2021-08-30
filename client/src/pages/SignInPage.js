@@ -11,7 +11,7 @@ import { useHistory } from "react-router-dom";
 import { blue } from "@material-ui/core/colors";
 
 const SignInPage = () => {
-  const { setUser, setLoading } = useContext(UserContext);
+  const { setUser, setLoading, setNewUser } = useContext(UserContext);
   const history = useHistory();
 
   const signIn = () => {
@@ -19,13 +19,9 @@ const SignInPage = () => {
     signInWithGoogle().then((user) => {
       if (user.newUser) {
         console.log("create pages");
-        setLoading(true);
-        setUser(user.user);
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000);
 
-        history.push("/create");
+        setUser(user.user);
+        setNewUser(true);
       } else {
         setUser(user.user);
       }
