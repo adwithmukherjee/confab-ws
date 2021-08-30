@@ -55,8 +55,10 @@ export default function useAgora(
     await client.publish([microphoneTrack]);
 
     (window as any).client = client;
+
     //  (window as any).videoTrack = cameraTrack;
 
+    (window as any).localStream = microphoneTrack.getMediaStreamTrack();
     setJoinState(true);
   }
 

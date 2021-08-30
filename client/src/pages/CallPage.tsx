@@ -100,7 +100,10 @@ const CallPage = () => {
 
       setRemoteUsers(
         remoteUserList.filter((remoteUser) => {
-          return remoteUser.user.email !== localUser.user.email;
+          return (
+            remoteUser.user.email !== localUser.user.email &&
+            remoteUser.audioTrack
+          );
         })
       );
     } else {
@@ -125,13 +128,13 @@ const CallPage = () => {
     });
 
     return () => {
-      leave().then(() => {
-        socket.emit(events.LEAVE_CHANNEL, {
-          channel,
-          user: localUser && convertFromAgoraUser(localUser),
-        });
-        socket.off(events.UPDATE_USER, setRemoteUserState);
+      socket.emit(events.LEAVE_CHANNEL, {
+        channel,
+        user: localUser && convertFromAgoraUser(localUser),
       });
+      leave();
+      socket.off(events.UPDATE_USER, setRemoteUserState);
+      console.log("LEAVING USE EFFECT");
 
       //socket.disconnect();
     };
@@ -183,38 +186,41 @@ const CallPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localUser]);
 
-  useEffect(() => {
-    const refresh = () => {
-      console.log("ass");
-      if (localUser?.audioTrack === undefined && joinedOnce && localUser) {
-        leave().then(() => {
-          join(appid, channel, token).then(() => {
-            setLocalUser({
-              ...localUser,
-              audioTrack: localAudioTrackRef.current,
-            });
-          });
-        });
-      }
-    };
-    refresh();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [localUser?.audioTrack]);
+  // useEffect(() => {
+  //   const refresh = () => {
+  //     console.log("ass");
+  //     if (localUser?.audioTrack === undefined && joinedOnce && localUser) {
+  //       leave().then(() => {
+  //         join(appid, channel, token).then(() => {
+  //           setLocalUser({
+  //             ...localUser,
+  //             audioTrack: localAudioTrackRef.current,
+  //           });
+  //         });
+  //       });
+  //     }
+  //   };
+  //   refresh();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [localUser?.audioTrack]);
 
   const leaveMeeting = async () => {
     //console.log("ass");
-    await leave();
+
     socket.emit(events.LEAVE_CHANNEL, {
       channel,
       user: localUser && convertFromAgoraUser(localUser),
     });
+    leave();
     //socket.disconnect();
+    //history.goBack();
     history.push("/");
   };
 
   const getReplaced = async () => {
-    await leave();
+    leave();
     //socket.disconnect();
+    //history.goBack();
     history.push("/");
   };
 

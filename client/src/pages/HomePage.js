@@ -17,6 +17,18 @@ const HomePage = () => {
   const [isOpen, setOpen] = useState(false);
   const [modalText, setModalText] = useState({ title: "", description: "" });
 
+  useEffect(() => {
+    console.log("HOME PAGE CLEANUP");
+    if (window.localStream) {
+      console.log(window.localStream);
+      try {
+        window.localStream.stop();
+      } catch {
+        console.log("FAILED TO CLOSE STREAM");
+      }
+    }
+  }, []);
+
   function handleCreateRoom() {
     createCall().then((channel) => {
       history.push(`/call/${channel}`);

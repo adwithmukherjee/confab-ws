@@ -247,7 +247,7 @@ const Call = (props: CallProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localUser?.muted, localAudioTrack]);
 
-  return localUser ? (
+  return (
     <div>
       <audio className="audio" style={{ height: 0, width: 0 }}>
         <source src="https://firebasestorage.googleapis.com/v0/b/huddle-7dff8.appspot.com/o/cork.mp3?alt=media&token=a80a2ddc-8e85-41f8-b38c-8df04d2f7289" />
@@ -607,7 +607,7 @@ const Call = (props: CallProps) => {
         </div>
       </div>
     </div>
-  ) : null;
+  );
 };
 
 type ChannelParams = {
