@@ -92,7 +92,10 @@ const Participant = (props: ParticipantProps) => {
               width: "100%",
               height: "100%",
               borderRadius: isMobile ? 35 : 50,
-              opacity: props.user.audioTrack === undefined ? 0.3 : 1,
+              opacity:
+                props.user.audioTrack === undefined && !props.user.muted
+                  ? 0.3
+                  : 1,
             }}
           ></img>
         )}

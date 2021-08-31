@@ -436,7 +436,10 @@ const Call = (props: CallProps) => {
               }}
             >
               <Editor
-                toolbar={{ options: ["link", "emoji"] }}
+                toolbar={{
+                  options: ["link", "emoji"],
+                  link: { defaultTargetOption: "_blank" },
+                }}
                 editorState={editorState}
                 wrapperStyle={{ height: "50vh" }}
                 //editorStyle={{ height: "100%", border: "solid" }}
@@ -550,6 +553,7 @@ const Call = (props: CallProps) => {
                     color: "rgb(40,40,40)",
                     wordBreak: "break-word",
                     overflowY: "auto",
+                    userSelect: "text",
                   }}
                   dangerouslySetInnerHTML={{
                     __html: selectedUser.user.profile,
