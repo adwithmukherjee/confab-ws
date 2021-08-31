@@ -338,7 +338,7 @@ export function ConfabTitleWithTagline({ titleStyle }) {
           fontSize: isMobile ? 15 : 25,
         }}
       >
-        Work at the speed of sound {isMobile ? "(mobile)" : "(desktop)"}
+        Work at the speed of sound
       </Typography>
     </div>
   );
