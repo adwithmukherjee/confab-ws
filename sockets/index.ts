@@ -137,7 +137,9 @@ module.exports = (io: Server) => (socket: Socket) => {
     console.log("disconnecting");
     const { channel, user }: { channel: string; user: string } = socket.data;
     if (channel in channels && user in channels[channel].users) {
-      channels[channel].users[user].active = false;
+      if (channels[channel].users[user].socketId == socket.id) {
+        channels[channel].users[user].active = false;
+      }
     }
     sendUserData(channel);
 

@@ -95,7 +95,9 @@ module.exports = function (io) { return function (socket) {
         console.log("disconnecting");
         var _a = socket.data, channel = _a.channel, user = _a.user;
         if (channel in channels && user in channels[channel].users) {
-            channels[channel].users[user].active = false;
+            if (channels[channel].users[user].socketId == socket.id) {
+                channels[channel].users[user].active = false;
+            }
         }
         sendUserData(channel);
         // console.log(socket.data.channel);
