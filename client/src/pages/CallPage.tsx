@@ -232,6 +232,11 @@ const CallPage = () => {
   console.log(remoteAgoraUsers);
   console.log("Connection State:");
   console.log(client.connectionState);
+  client.on("connection-state-change", (curState, revState, reason) => {
+    console.log(curState);
+    console.log(revState);
+    console.log(reason);
+  });
 
   return localUser ? (
     <Call
