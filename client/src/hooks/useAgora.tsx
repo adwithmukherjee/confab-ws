@@ -49,7 +49,9 @@ export default function useAgora(
     uid?: string | number | null
   ) {
     if (!client) return;
-    const microphoneTrack = await createLocalTracks();
+    const microphoneTrack = await createLocalTracks({
+      encoderConfig: "speech_standard",
+    });
 
     await client.join(appid, channel, token || null);
     await client.publish([microphoneTrack]);

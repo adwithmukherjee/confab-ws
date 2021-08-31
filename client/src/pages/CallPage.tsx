@@ -10,14 +10,16 @@ import { socket } from "../api/sockets/sockets";
 import events from "../api/sockets/events";
 import Loading from "../components/Loading";
 
-const client = AgoraRTC.createClient({ codec: "h264", mode: "rtc" });
-
 function convertFromAgoraUser(user: AgoraUserObject): UserObject {
   const { audioTrack, ...rest } = user;
   return rest;
 }
 
 const CallPage = () => {
+  const [client] = useState(
+    AgoraRTC.createClient({ codec: "vp8", mode: "rtc" })
+  );
+
   const user = useContext(UserContext)?.user;
   const playSound = () => {
     const audioElement = document.getElementsByClassName(
@@ -205,6 +207,7 @@ const CallPage = () => {
   const leaveMeeting = async () => {
     //console.log("ass");
 
+    console.log("IN leaveMeeting function");
     socket.emit(events.LEAVE_CHANNEL, {
       channel,
       user: localUser && convertFromAgoraUser(localUser),
@@ -216,6 +219,7 @@ const CallPage = () => {
   };
 
   const getReplaced = async () => {
+    console.log("LEAVE MESSAGE RECEIVED (Replace function)");
     leave();
     //socket.disconnect();
     //history.goBack();
@@ -226,6 +230,8 @@ const CallPage = () => {
   console.log(localUser);
   console.log(remoteUsers);
   console.log(remoteAgoraUsers);
+  console.log("Connection State:");
+  console.log(client.connectionState);
 
   return localUser ? (
     <Call
