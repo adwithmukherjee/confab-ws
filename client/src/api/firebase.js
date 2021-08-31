@@ -41,7 +41,7 @@ const signInWithGoogle = async () => {
       .auth()
       .setPersistence(
         process.env.NODE_ENV === "production"
-          ? firebase.auth.Auth.Persistence.LOCAL
+          ? firebase.auth.Auth.Persistence.SESSION //CHANGE THIS BACK TO LOCAL AFTER TESTING
           : firebase.auth.Auth.Persistence.SESSION
       )
       .then(() => {
