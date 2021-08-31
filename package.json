@@ -8,6 +8,7 @@
     "start": "node index.js",
     "build": "tsc --project ./",
     "client": "npm start --prefix client",
+    "server" : "npm run build & ts-node-dev --respawn --pretty --transpile-only index.ts",
     "dev": "npm run build & ts-node-dev --respawn --pretty --transpile-only index.ts & npm run client"
   },
   "author": "",

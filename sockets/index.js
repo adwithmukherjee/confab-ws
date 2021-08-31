@@ -66,6 +66,26 @@ module.exports = function (io) { return function (socket) {
         });
         sendUserData(channel);
     });
+    socket.on(events.GET_USERS, function (_a) {
+        var uids = _a.uids;
+        console.log("REMOTE UIDS");
+        console.log(uids);
+        if (channels[socket.data.channel]) {
+            var users_1 = channels[socket.data.channel].users;
+            console.log("poop");
+            //console.log(users);
+            var remoteUsers_1 = {};
+            uids.forEach(function (uid) {
+                var remoteUser = Object.values(users_1).find(function (user) {
+                    return user.uid === uid;
+                });
+                if (remoteUser) {
+                    remoteUsers_1[uid] = convertFromSocketUser(remoteUser);
+                }
+            });
+            io.to(socket.id).emit(events.GET_USERS, { remoteUsers: remoteUsers_1 });
+        }
+    });
     socket.on(events.UPDATE_USER, function (_a) {
         var channel = _a.channel, user = _a.user;
         console.log("UPDATE");
@@ -112,15 +132,15 @@ module.exports = function (io) { return function (socket) {
     socket.on("connect_failed", function (err) { return console.log(err); });
     function sendUserData(channel) {
         if (channels[channel]) {
-            var users_1 = channels[channel].users;
-            var values = Object.keys(users_1)
+            var users_2 = channels[channel].users;
+            var values = Object.keys(users_2)
                 .filter(function (val) {
-                return users_1[val].active;
+                return users_2[val].active;
             })
                 .map(function (key) {
-                return convertFromSocketUser(users_1[key]);
+                return convertFromSocketUser(users_2[key]);
             });
-            console.log(values);
+            //console.log(values);
             io.in(channel).emit(events.UPDATE_USER, {
                 users: values,
             });

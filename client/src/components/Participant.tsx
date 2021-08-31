@@ -1,5 +1,5 @@
 import { useEffect, useState, MouseEventHandler } from "react";
-import { AgoraUserObject } from "./Call";
+import { AgoraUserObject, UserObject } from "./Call";
 import { useStyles } from "./Call";
 import { Paper } from "@material-ui/core";
 import { isMobile } from "react-device-detect";
@@ -10,12 +10,14 @@ import {
   AiOutlineConsoleSql,
 } from "react-icons/ai";
 import MediaPlayer from "./MediaPlayer";
+import { ILocalAudioTrack, IRemoteAudioTrack } from "agora-rtc-sdk-ng";
 
 export interface ParticipantProps {
   // channel: String;
   // uid: String | undefined;
   // remoteUsers: any;
-  user: AgoraUserObject | undefined;
+  userData: UserObject;
+  audioTrack: IRemoteAudioTrack | ILocalAudioTrack | undefined;
   onClick: MouseEventHandler<HTMLImageElement>;
   isLocal: boolean;
   isAddParticipant: boolean;
@@ -38,17 +40,17 @@ const Participant = (props: ParticipantProps) => {
   useEffect(() => {
     const interval = setInterval(() => {
       // console.log(props.user);
-      if (props.user?.audioTrack && !props.isAddParticipant) {
+      if (props.audioTrack && !props.isAddParticipant) {
         //console.log(props.user?.audioTrack.getVolumeLevel());
-        setAudio(props.user?.audioTrack.getVolumeLevel());
+        setAudio(props.audioTrack.getVolumeLevel());
       }
     }, 100);
     return () => clearInterval(interval);
-  }, [props.isAddParticipant, props.user?.audioTrack]);
+  }, [props.isAddParticipant, props.audioTrack]);
 
   const classes = useStyles();
 
-  return props.user && props.user.user ? (
+  return props.userData && props.userData.user ? (
     <div className={classes.participant} onClick={props.onClick}>
       <Paper
         elevation={3}
@@ -86,20 +88,20 @@ const Participant = (props: ParticipantProps) => {
           </div>
         ) : (
           <img
-            src={props.user.user.photoURL}
+            src={props.userData.user.photoURL}
             alt=""
             style={{
               width: "100%",
               height: "100%",
               borderRadius: isMobile ? 35 : 50,
               opacity:
-                props.user.audioTrack === undefined && !props.user.muted
+                props.audioTrack === undefined && !props.userData.muted
                   ? 0.3
                   : 1,
             }}
           ></img>
         )}
-        {props.user.muted && !props.isAddParticipant && (
+        {props.userData.muted && !props.isAddParticipant && (
           <div
             style={{
               position: "absolute",
@@ -121,11 +123,12 @@ const Participant = (props: ParticipantProps) => {
       </Paper>
       {!props.isAddParticipant && (
         <div className={classes.label}>
-          {props.user.user.displayName + (props.user.isHost ? " (Host)" : "")}
+          {props.userData.user.displayName +
+            (props.userData.isHost ? " (Host)" : "")}
         </div>
       )}
       <MediaPlayer
-        audioTrack={props.user.audioTrack}
+        audioTrack={props.audioTrack}
         isLocal={props.isLocal}
       ></MediaPlayer>
     </div>

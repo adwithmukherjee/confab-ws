@@ -1,16 +1,21 @@
 import React from "react";
 import Participant from "./Participant";
 import MuiAlert from "@material-ui/lab/Alert";
-import { useStyles } from "./Call";
+import { UserObject, useStyles } from "./Call";
 import { AgoraUserObject } from "./Call";
 import { Snackbar } from "@material-ui/core";
+import { IAgoraRTCRemoteUser, ILocalAudioTrack } from "agora-rtc-sdk-ng";
 
 export interface ParticipantsProps {
-  me: AgoraUserObject | undefined;
-  users: AgoraUserObject[] | undefined;
+  me: UserObject | undefined;
+  localAudioTrack: ILocalAudioTrack | undefined;
+  users: { [uid: string]: IAgoraRTCRemoteUser };
+  userData: {
+    [uid: string]: UserObject;
+  };
   setLocalOpen: (val: boolean) => void;
   setRemoteOpen: (val: boolean) => void;
-  setSelectedUser: (user: AgoraUserObject | undefined) => void;
+  setSelectedUser: (user: UserObject | undefined) => void;
 }
 
 const getGridTemplateColumns = (numberOfParticipants: number): string => {
@@ -26,6 +31,7 @@ const getGridTemplateColumns = (numberOfParticipants: number): string => {
 const Participants = (props: ParticipantsProps) => {
   const me = props.me;
   const users = props.users;
+  const userData = props.userData;
 
   // console.log(me);
   // console.log(users);
@@ -33,7 +39,7 @@ const Participants = (props: ParticipantsProps) => {
   const meParticipant = 1;
   const addParticipant = 1;
   const numberOfParticipants =
-    meParticipant + addParticipant + (users?.length ?? 0);
+    meParticipant + addParticipant + (Object.keys(users).length ?? 0);
   const gridTemplateColumns = getGridTemplateColumns(numberOfParticipants);
 
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
@@ -69,7 +75,7 @@ const Participants = (props: ParticipantsProps) => {
         gridTemplateColumns: gridTemplateColumns,
       }}
     >
-      {users &&
+      {/* {users &&
         users
           .filter((user: AgoraUserObject | undefined) => {
             return user?.isHost;
@@ -86,18 +92,37 @@ const Participants = (props: ParticipantsProps) => {
                 isAddParticipant={false}
               />
             );
-          })}
-      <Participant
-        user={me}
-        onClick={() => {
-          //props.setSelectedUser(me);
-          props.setLocalOpen(true);
-        }}
-        isLocal={true}
-        isAddParticipant={false}
-      />
+          })} */}
+      {me && (
+        <Participant
+          userData={me}
+          audioTrack={props.localAudioTrack}
+          onClick={() => {
+            //props.setSelectedUser(me);
+            props.setLocalOpen(true);
+          }}
+          isLocal={true}
+          isAddParticipant={false}
+        />
+      )}
 
-      {users &&
+      {Object.keys(users).map((uid) => {
+        const remoteUser = users[uid];
+        const remoteUserData = userData[uid];
+        return (
+          <Participant
+            userData={remoteUserData}
+            audioTrack={remoteUser.audioTrack}
+            onClick={() => {
+              props.setSelectedUser(remoteUserData);
+              props.setRemoteOpen(true);
+            }}
+            isLocal={false}
+            isAddParticipant={false}
+          />
+        );
+      })}
+      {/* {users &&
         users.map((user: AgoraUserObject | undefined) => {
           if (user && !user.isHost) {
             return (
@@ -114,15 +139,18 @@ const Participants = (props: ParticipantsProps) => {
           } else {
             return null;
           }
-        })}
-      <Participant
-        user={me}
-        onClick={() => {
-          addParticipantClicked();
-        }}
-        isLocal={true}
-        isAddParticipant={true}
-      />
+        })} */}
+      {me && (
+        <Participant
+          userData={me}
+          audioTrack={props.localAudioTrack}
+          onClick={() => {
+            addParticipantClicked();
+          }}
+          isLocal={true}
+          isAddParticipant={true}
+        />
+      )}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={4000}

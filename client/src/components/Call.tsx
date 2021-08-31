@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AgoraRTC, {
+  IAgoraRTCRemoteUser,
   ILocalAudioTrack,
   IRemoteAudioTrack,
 } from "agora-rtc-sdk-ng";
@@ -45,12 +46,14 @@ export interface UserObject {
   isHost: boolean;
   muted: boolean;
   uid: string | undefined;
-  user: {
-    displayName: string;
-    email: string;
-    photoURL: string;
-    profile: string;
-  };
+  user:
+    | {
+        displayName: string;
+        email: string;
+        photoURL: string;
+        profile: string;
+      }
+    | undefined;
 }
 
 export interface AgoraUserObject {
@@ -58,26 +61,28 @@ export interface AgoraUserObject {
   muted: boolean;
   uid: string | undefined;
   audioTrack: ILocalAudioTrack | IRemoteAudioTrack | undefined;
-  user: {
-    displayName: string;
-    email: string;
-    photoURL: string;
-    profile: string;
-  };
+  user:
+    | {
+        displayName: string;
+        email: string;
+        photoURL: string;
+        profile: string;
+      }
+    | undefined;
 }
 
 interface CallProps {
   channel: string;
-  localUser: AgoraUserObject;
+  localUser: UserObject;
   localAudioTrack: ILocalAudioTrack | undefined;
-  remoteUsers: AgoraUserObject[];
+  remoteUsers: { [uid: string]: IAgoraRTCRemoteUser };
+  remoteUserData: {
+    [uid: string]: UserObject;
+  };
   leaveMeeting: () => void;
   setLocalUser: Function;
 }
-function convertFromAgoraUser(user: AgoraUserObject): UserObject {
-  delete user.audioTrack;
-  return user;
-}
+
 ////////////
 
 const Call = (props: CallProps) => {
@@ -88,6 +93,7 @@ const Call = (props: CallProps) => {
     localAudioTrack,
     setLocalUser,
     remoteUsers,
+    remoteUserData,
   } = props;
 
   const playSound = () => {
@@ -150,14 +156,14 @@ const Call = (props: CallProps) => {
   //bottom sheet
   const [localOpen, setLocalOpen] = useState(false);
   const [remoteOpen, setRemoteOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<
-    AgoraUserObject | undefined
-  >();
+  const [selectedUser, setSelectedUser] = useState<UserObject | undefined>();
 
   //image upload
 
   const [image, setImage] = useState<Blob | undefined>(undefined);
-  const [imageURL, setImageURL] = useState(localUser.user.photoURL);
+  const [imageURL, setImageURL] = useState<string | undefined>(
+    localUser.user?.photoURL
+  );
 
   const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -180,7 +186,7 @@ const Call = (props: CallProps) => {
         console.log("success");
         uploadTask.snapshot.ref.getDownloadURL().then((url: string) => {
           setLocalUser((localUser: AgoraUserObject | undefined) => {
-            if (localUser) {
+            if (localUser && localUser.user) {
               const { photoURL, ...user } = localUser?.user;
               return { ...localUser, user: { ...user, photoURL: url } };
             }
@@ -204,25 +210,29 @@ const Call = (props: CallProps) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
   useEffect(() => {
-    const html = localUser.user.profile;
-    const content = ContentState.createFromBlockArray(
-      htmlToDraft(html).contentBlocks
-    );
-    setEditorState(EditorState.createWithContent(content));
+    if (localUser.user) {
+      const html = localUser.user.profile;
+      const content = ContentState.createFromBlockArray(
+        htmlToDraft(html).contentBlocks
+      );
+      setEditorState(EditorState.createWithContent(content));
+    }
   }, []);
 
   useEffect(() => {
     //get profile for first time on load
-    const profileHTML = draftToHtml(
-      convertToRaw(editorState.getCurrentContent())
-    );
+    if (localUser) {
+      const profileHTML = draftToHtml(
+        convertToRaw(editorState.getCurrentContent())
+      );
 
-    setLocalUser((localUser: AgoraUserObject | undefined) => {
-      if (localUser) {
-        const { profile, ...user } = localUser?.user;
-        return { ...localUser, user: { ...user, profile: profileHTML } };
-      }
-    });
+      setLocalUser((localUser: AgoraUserObject | undefined) => {
+        if (localUser && localUser.user) {
+          const { profile, ...user } = localUser?.user;
+          return { ...localUser, user: { ...user, profile: profileHTML } };
+        }
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editorState]);
 
@@ -352,7 +362,7 @@ const Call = (props: CallProps) => {
                   >
                     My Notepad
                   </div>
-                  {localUser && <div>{localUser.user.email}</div>}
+                  {localUser.user && <div>{localUser.user.email}</div>}
                 </div>
                 <div style={{ display: "flex" }}>
                   <Paper
@@ -499,9 +509,14 @@ const Call = (props: CallProps) => {
                 >
                   <div style={{ fontSize: "25px", lineHeight: "40px" }}>
                     {selectedUser &&
+                      selectedUser.user &&
                       selectedUser.user.displayName + "'s Notepad"}
                   </div>
-                  <div>{selectedUser && selectedUser.user.email}</div>
+                  <div>
+                    {selectedUser &&
+                      selectedUser.user &&
+                      selectedUser.user.email}
+                  </div>
                 </div>
                 <div style={{ display: "flex" }}>
                   <Paper
@@ -515,7 +530,11 @@ const Call = (props: CallProps) => {
                     }}
                   >
                     <img
-                      src={selectedUser && selectedUser.user.photoURL}
+                      src={
+                        selectedUser &&
+                        selectedUser.user &&
+                        selectedUser.user.photoURL
+                      }
                       alt=""
                       style={{
                         width: "50px",
@@ -556,7 +575,10 @@ const Call = (props: CallProps) => {
                     userSelect: "text",
                   }}
                   dangerouslySetInnerHTML={{
-                    __html: selectedUser.user.profile,
+                    __html:
+                      selectedUser && selectedUser.user
+                        ? selectedUser.user.profile
+                        : "",
                   }}
                 ></div>
               )
@@ -576,10 +598,12 @@ const Call = (props: CallProps) => {
               <div style={{ height: 50 }}></div>
               <Participants
                 me={localUser}
+                localAudioTrack={props.localAudioTrack}
                 users={remoteUsers}
+                userData={remoteUserData}
                 setLocalOpen={(val: boolean) => setLocalOpen(val)}
                 setRemoteOpen={(val: boolean) => setRemoteOpen(val)}
-                setSelectedUser={(val: AgoraUserObject | undefined) => {
+                setSelectedUser={(val: UserObject | undefined) => {
                   if (val) {
                     setSelectedUser(val);
                   }

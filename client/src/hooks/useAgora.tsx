@@ -19,7 +19,7 @@ export default function useAgora(
   joinState: boolean;
   leave: () => Promise<void>;
   join: Function;
-  remoteUsers: IAgoraRTCRemoteUser[];
+  remoteUsers: { [uid: string]: IAgoraRTCRemoteUser };
 } {
   // const [localVideoTrack, setLocalVideoTrack] = useState<ILocalVideoTrack | undefined>(undefined);
   const [localAudioTrack, setLocalAudioTrack] = useState<
@@ -28,7 +28,9 @@ export default function useAgora(
 
   const [joinState, setJoinState] = useState(false);
 
-  const [remoteUsers, setRemoteUsers] = useState<IAgoraRTCRemoteUser[]>([]);
+  const [remoteUsers, setRemoteUsers] = useState<{
+    [uid: string]: IAgoraRTCRemoteUser;
+  }>({});
 
   async function createLocalTracks(
     audioConfig?: MicrophoneAudioTrackInitConfig
@@ -73,33 +75,44 @@ export default function useAgora(
     //   localVideoTrack.stop();
     //   localVideoTrack.close();
     // }
-    setRemoteUsers([]);
+    setRemoteUsers({});
     setJoinState(false);
     await client?.leave();
   }
 
   useEffect(() => {
     if (!client) return;
-    setRemoteUsers(client.remoteUsers);
+
+    const dictFromArray = (array: IAgoraRTCRemoteUser[]) => {
+      const remoteUsersDict: { [uid: string]: IAgoraRTCRemoteUser } = {};
+      array.forEach((remoteUser) => {
+        remoteUsersDict[remoteUser.uid.toString()] = remoteUser;
+      });
+      return remoteUsersDict;
+    };
+
+    setRemoteUsers(dictFromArray(client.remoteUsers));
 
     const handleUserPublished = async (
       user: IAgoraRTCRemoteUser,
-      mediaType: "audio" | "video"
+      mediaType: "audio"
     ) => {
       await client.subscribe(user, mediaType);
+      console.log(user.uid);
       // toggle rerender while state of remoteUsers changed.
-      setRemoteUsers((remoteUsers) => Array.from(client.remoteUsers));
+      setRemoteUsers((remoteUsers) => dictFromArray(client.remoteUsers));
     };
     const handleUserUnpublished = (user: IAgoraRTCRemoteUser) => {
-      setRemoteUsers((remoteUsers) => Array.from(client.remoteUsers));
+      setRemoteUsers((remoteUsers) => dictFromArray(client.remoteUsers));
     };
     const handleUserJoined = (user: IAgoraRTCRemoteUser) => {
       playSound();
-      setRemoteUsers((remoteUsers) => Array.from(client.remoteUsers));
+      console.log(user.uid);
+      setRemoteUsers((remoteUsers) => dictFromArray(client.remoteUsers));
     };
     const handleUserLeft = (user: IAgoraRTCRemoteUser) => {
       //console.log(''+ user.uid + 'left')
-      setRemoteUsers((remoteUsers) => Array.from(client.remoteUsers));
+      setRemoteUsers((remoteUsers) => dictFromArray(client.remoteUsers));
     };
     client.on("user-published", handleUserPublished);
     client.on("user-unpublished", handleUserUnpublished);
@@ -112,6 +125,7 @@ export default function useAgora(
       client.off("user-joined", handleUserJoined);
       client.off("user-left", handleUserLeft);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [client]);
 
   return {

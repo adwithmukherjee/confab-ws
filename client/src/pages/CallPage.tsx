@@ -10,9 +10,14 @@ import { socket } from "../api/sockets/sockets";
 import events from "../api/sockets/events";
 import Loading from "../components/Loading";
 
-function convertFromAgoraUser(user: AgoraUserObject): UserObject {
+function convertFromAgoraUser(user: AgoraUserObject): UserObject | undefined {
   const { audioTrack, ...rest } = user;
-  return rest;
+  if (rest.user) {
+    const { isHost, uid, muted } = rest;
+    return { isHost, uid, muted, user: rest.user };
+  } else {
+    return undefined;
+  }
 }
 
 const CallPage = () => {
@@ -32,9 +37,10 @@ const CallPage = () => {
 
   const [joinedOnce, setJoinedOnce] = useState(false);
 
-  const [localUser, setLocalUser] = useState<AgoraUserObject | undefined>(
-    undefined
-  );
+  const [localUser, setLocalUser] = useState<UserObject | undefined>(undefined);
+  const [remoteUserData, setRemoteUserData] = useState<{
+    [uid: string]: UserObject;
+  }>({});
 
   const [remoteUsers, setRemoteUsers] = useState<AgoraUserObject[]>([]);
 
@@ -77,38 +83,55 @@ const CallPage = () => {
       console.log("emitting");
       socket.emit(events.UPDATE_USER, {
         channel,
-        user: convertFromAgoraUser(localUser),
+        user: localUser,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [remoteAgoraUsers]);
 
   const setRemoteUserState = ({ users }: { users: UserObject[] }) => {
-    console.log("receiving");
-    const localUser = localUserRef.current;
-    const remoteAgoraUsers = remoteAgoraUsersRef.current;
-    console.log(users);
-    // console.log(localUser);
-    //console.log(remoteAgoraUsers);
-    // console.log(localAudioTrack);
-    // console.log(localAudioTrackRef.current);
-    if (localUser && remoteAgoraUsers) {
-      const remoteUserList = users.map((remoteUser) => {
-        const audioTrack = remoteAgoraUsers.find((val) => {
-          return val.uid.toString() === remoteUser.uid;
-        })?.audioTrack;
-        return { ...remoteUser, audioTrack };
-      });
-
-      setRemoteUsers(
-        remoteUserList.filter((remoteUser) => {
-          return remoteUser.user.email !== localUser.user.email;
-        })
-      );
-    } else {
-      //console.log("no remote users");
-    }
+    const tmp: {
+      [uid: string]: UserObject;
+    } = remoteUserData;
+    users.forEach((user) => {
+      if (user.uid) {
+        tmp[user.uid] = user;
+      }
+    });
+    setRemoteUserData(tmp);
+    // console.log("receiving");
+    // const localUser = localUserRef.current;
+    // const remoteAgoraUsers = remoteAgoraUsersRef.current;
+    // console.log(users);
+    // // console.log(localUser);
+    // //console.log(remoteAgoraUsers);
+    // // console.log(localAudioTrack);
+    // // console.log(localAudioTrackRef.current);
+    // if (localUser && remoteAgoraUsers) {
+    //   const remoteUserList = users.map((remoteUser) => {
+    //     const audioTrack = remoteAgoraUsers.find((val) => {
+    //       return val.uid.toString() === remoteUser.uid;
+    //     })?.audioTrack;
+    //     return { ...remoteUser, audioTrack };
+    //   });
+    //   setRemoteUsers(
+    //     remoteUserList.filter((remoteUser) => {
+    //       return remoteUser.user.email !== localUser.user.email;
+    //     })
+    //   );
+    // } else {
+    //   //console.log("no remote users");
+    // }
   };
+
+  useEffect(() => {
+    console.log(remoteAgoraUsers);
+    socket.emit(events.GET_USERS, { uids: Object.keys(remoteAgoraUsers) });
+  }, [remoteAgoraUsers]);
+
+  useEffect(() => {
+    console.log(remoteUserData);
+  }, [remoteUserData]);
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -116,12 +139,18 @@ const CallPage = () => {
     });
 
     socket.on(events.UPDATE_USER, setRemoteUserState);
+    socket.on(
+      events.GET_USERS,
+      ({ remoteUsers }: { remoteUsers: { [uid: string]: UserObject } }) => {
+        console.log("GETTING REMOTE USER DATA");
+        setRemoteUserData(remoteUsers);
+      }
+    );
     socket.on(events.LEAVE_CHANNEL, getReplaced);
     socket.on(events.JOIN_CHANNEL, ({ user }: { user: UserObject }) => {
-      console.log(user);
+      console.log("IN JOIN RECEIVER");
       setLocalUser({
         ...user,
-        audioTrack: localAudioTrackRef.current,
       });
       setJoinedOnce(true);
     });
@@ -129,7 +158,7 @@ const CallPage = () => {
     return () => {
       socket.emit(events.LEAVE_CHANNEL, {
         channel,
-        user: localUser && convertFromAgoraUser(localUser),
+        user: localUser,
       });
       leave();
       socket.off(events.UPDATE_USER, setRemoteUserState);
@@ -179,30 +208,30 @@ const CallPage = () => {
       console.log("emitting!");
       socket.emit(events.UPDATE_USER, {
         channel,
-        user: convertFromAgoraUser(localUser),
+        user: localUser,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localUser]);
 
-  useEffect(() => {
-    const refresh = () => {
-      console.log("ass");
-      if (localUser?.audioTrack === undefined && joinedOnce && localUser) {
-        console.log("rejoining");
-        leave().then(() => {
-          join(appid, channel, token).then(() => {
-            setLocalUser({
-              ...localUser,
-              audioTrack: localAudioTrackRef.current,
-            });
-          });
-        });
-      }
-    };
-    refresh();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [localUser?.audioTrack]);
+  // useEffect(() => {
+  //   const refresh = () => {
+  //     console.log("ass");
+  //     if (localUser?.audioTrack === undefined && joinedOnce && localUser) {
+  //       console.log("rejoining");
+  //       leave().then(() => {
+  //         join(appid, channel, token).then(() => {
+  //           setLocalUser({
+  //             ...localUser,
+
+  //           });
+  //         });
+  //       });
+  //     }
+  //   };
+  //   refresh();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [localUser]);
 
   const leaveMeeting = async () => {
     //console.log("ass");
@@ -210,7 +239,7 @@ const CallPage = () => {
     console.log("IN leaveMeeting function");
     socket.emit(events.LEAVE_CHANNEL, {
       channel,
-      user: localUser && convertFromAgoraUser(localUser),
+      user: localUser,
     });
     leave();
     //socket.disconnect();
@@ -226,24 +255,25 @@ const CallPage = () => {
     history.push("/");
   };
 
-  console.log("AUDIO TRACK DEBUGGING");
-  console.log(localUser);
-  console.log(remoteUsers);
-  console.log(remoteAgoraUsers);
-  console.log("Connection State:");
-  console.log(client.connectionState);
-  client.on("connection-state-change", (curState, revState, reason) => {
-    console.log(curState);
-    console.log(revState);
-    console.log(reason);
-  });
+  // console.log("AUDIO TRACK DEBUGGING");
+  // console.log(localUser);
+  // console.log(remoteUsers);
+  // console.log(remoteAgoraUsers);
+  // console.log("Connection State:");
+  // console.log(client.connectionState);
+  // client.on("connection-state-change", (curState, revState, reason) => {
+  //   console.log(curState);
+  //   console.log(revState);
+  //   console.log(reason);
+  // });
 
   return localUser ? (
     <Call
       channel={channel}
       localUser={localUser}
       localAudioTrack={localAudioTrack}
-      remoteUsers={remoteUsers}
+      remoteUsers={remoteAgoraUsers}
+      remoteUserData={remoteUserData}
       leaveMeeting={leaveMeeting}
       setLocalUser={setLocalUser}
     />

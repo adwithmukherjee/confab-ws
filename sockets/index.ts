@@ -98,6 +98,29 @@ module.exports = (io: Server) => (socket: Socket) => {
     }
   );
 
+  socket.on(events.GET_USERS, ({ uids }: { uids: string[] }) => {
+    console.log("REMOTE UIDS");
+    console.log(uids);
+    if (channels[socket.data.channel]) {
+      const { users } = channels[socket.data.channel];
+      console.log("poop");
+      //console.log(users);
+      let remoteUsers: { [uid: string]: UserObject } = {};
+
+      uids.forEach((uid) => {
+        const remoteUser = Object.values(users).find((user) => {
+          return user.uid === uid;
+        });
+
+        if (remoteUser) {
+          remoteUsers[uid] = convertFromSocketUser(remoteUser);
+        }
+      });
+
+      io.to(socket.id).emit(events.GET_USERS, { remoteUsers });
+    }
+  });
+
   socket.on(
     events.UPDATE_USER,
     ({ channel, user }: { channel: string; user: UserObject }) => {
@@ -167,7 +190,7 @@ module.exports = (io: Server) => (socket: Socket) => {
           return convertFromSocketUser(users[key]);
         });
 
-      console.log(values);
+      //console.log(values);
 
       io.in(channel).emit(events.UPDATE_USER, {
         users: values,
