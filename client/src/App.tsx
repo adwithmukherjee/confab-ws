@@ -27,6 +27,7 @@ function App() {
   const [user, setUser] = useState<User | undefined>(undefined);
   const [newUser, setNewUser] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [authScriptLoaded, setAuthScriptLoaded] = useState(false);
 
   const globals: UserContextInterface = {
     user,
@@ -38,13 +39,25 @@ function App() {
   };
 
   useEffect(() => {
-    loadGapiClient(window);
-    //initSocket();
+    const timeout = setTimeout(() => {
+      loadGapiClient(window);
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log("waiting");
+      if ((window as any).gapi.auth2) {
+        setAuthScriptLoaded(true);
+        clearInterval(interval);
+      }
+    }, 500);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
     auth.onAuthStateChanged((activeUser) => {
-      console.log("ass");
       if (activeUser) {
         getUser(activeUser.email).then((user) => {
           setUser(user);
@@ -73,7 +86,7 @@ function App() {
     <div>
       <ThemeProvider theme={theme}>
         <UserContext.Provider value={globals}>
-          {loading ? (
+          {loading || !authScriptLoaded ? (
             <Loading />
           ) : (
             <Router>
