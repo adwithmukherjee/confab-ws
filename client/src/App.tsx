@@ -44,6 +44,7 @@ function App() {
 
   useEffect(() => {
     auth.onAuthStateChanged((activeUser) => {
+      console.log("ass");
       if (activeUser) {
         getUser(activeUser.email).then((user) => {
           setUser(user);
@@ -51,6 +52,13 @@ function App() {
       }
       setLoading(false);
     });
+  }, []);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+    return () => clearTimeout(timeout);
   }, []);
 
   const theme = createTheme({
