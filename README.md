@@ -24,5 +24,13 @@ Then, in root directory,
 
 `git commit -m "something"`
 
-`git push heroku main`
+### To deploy internally: 
+
+`git push staging main` (visible at https://confab-internal.herokuapp.com/)
+
+### To deploy to production: 
+
+`git push heroku main` (visible at https://confab.bigmesslabs.com)
+
+
 
