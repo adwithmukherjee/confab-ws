@@ -26,7 +26,9 @@ Then, in root directory,
 
 ### To deploy internally: 
 
-`git push staging main` (visible at https://confab-internal.herokuapp.com/)
+`git push staging main` OR `git push origin main` (visible at https://confab-internal.herokuapp.com/)
+
+Pushing to `main` automatically deploys to internal branch. 
 
 ### To deploy to production: 
 
