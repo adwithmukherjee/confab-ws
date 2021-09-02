@@ -78,6 +78,7 @@ const HomePage = () => {
                   style={{ width: "80%", height: "80%" }}
                 />
               </a>
+              
             </Paper>
             <div className={classes.label}>Get Calendar Add-on</div>
             <div className={classes.description}>
