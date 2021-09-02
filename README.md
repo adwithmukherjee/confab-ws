@@ -6,6 +6,8 @@ Express server housed in `/`
 
 ## Running locally
 
+Run `npm install` both in the `/` and `client/` directories.
+
 To run server and client together: in root directory, `npm run dev`
 
 To run server by itself: in root directory, `npm run build` then `npm start`
