@@ -155,6 +155,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 20,
+    backgroundColor: "#F5F5F5",
   },
   modal: {
     position: "absolute",
