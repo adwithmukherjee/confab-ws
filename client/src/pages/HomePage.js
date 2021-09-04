@@ -7,10 +7,10 @@ import Paper from "@material-ui/core/Paper";
 import calIcon from "../assets/cal-icon2.png";
 import phoneIcon from "../assets/phone-icon.png";
 import { Link, useHistory } from "react-router-dom";
-import titleImg from "../assets/title.svg";
+
 import { blue } from "@material-ui/core/colors";
 import { createCall } from "../api/firebase";
-import { ConfabTitleWithTagline } from "./WaitlistPage";
+import { ConfabTitleWithoutSlogan } from "./WaitlistPage";
 
 const HomePage = () => {
   const history = useHistory();
@@ -40,7 +40,7 @@ const HomePage = () => {
   return (
     <div className="landing-container-1">
       <div className={classes.root}>
-        <ConfabTitleWithTagline />
+      <ConfabTitleWithoutSlogan />
 
         <div className={classes.buttonGroup}>
           <div className={classes.buttons}>
