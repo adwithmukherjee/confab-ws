@@ -6,6 +6,8 @@ Express server housed in `/`
 
 ## Running locally
 
+Run `npm install` both in the `/` and `client/` directories.
+
 To run server and client together: in root directory, `npm run dev`
 
 To run server by itself: in root directory, `npm run build` then `npm start`
@@ -22,5 +24,15 @@ Then, in root directory,
 
 `git commit -m "something"`
 
-`git push heroku main`
+### To deploy internally: 
+
+`git push staging main` OR `git push origin main` (visible at https://confab-internal.herokuapp.com/)
+
+Pushing to `main` automatically deploys to internal branch. 
+
+### To deploy to production: 
+
+`git push heroku main` (visible at https://confab.bigmesslabs.com)
+
+
 

@@ -1,6 +1,7 @@
 const loadGoogleScript = () => {
   // Loads the Google JavaScript Library
   (function () {
+    console.log("google script run");
     const id = "google-js";
     const src = "https://apis.google.com/js/platform.js"; // (Ref. 1)
 

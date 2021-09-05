@@ -9,6 +9,7 @@ import { Typography } from "@material-ui/core";
 import grey from "@material-ui/core/colors/grey";
 import { useHistory } from "react-router-dom";
 import { blue } from "@material-ui/core/colors";
+import Loading from "../components/Loading";
 
 const SignInPage = () => {
   const { setUser, setLoading, setNewUser } = useContext(UserContext);

@@ -34,6 +34,7 @@ const signInWithGoogle = async () => {
 
   const credential = firebase.auth.GoogleAuthProvider.credential(token);
 
+  const provider = new firebase.auth.GoogleAuthProvider();
   let userRecord = {};
 
   const user = new Promise((resolve, reject) => {
@@ -41,7 +42,7 @@ const signInWithGoogle = async () => {
       .auth()
       .setPersistence(
         process.env.NODE_ENV === "production"
-          ? firebase.auth.Auth.Persistence.SESSION //CHANGE THIS BACK TO LOCAL AFTER TESTING
+          ? firebase.auth.Auth.Persistence.LOCAL //CHANGE THIS BACK TO LOCAL AFTER TESTING
           : firebase.auth.Auth.Persistence.SESSION
       )
       .then(() => {
@@ -49,6 +50,7 @@ const signInWithGoogle = async () => {
           .auth()
           .signInWithCredential(credential)
           .then(({ user }) => {
+            console.log(user);
             const { email, displayName, photoURL } = user;
             userRecord = { displayName, profile: "", photoURL };
 
