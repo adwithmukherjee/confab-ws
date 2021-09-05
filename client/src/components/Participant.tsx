@@ -64,6 +64,7 @@ const Participant = (props: ParticipantProps) => {
                 -2 + 3.5 * Math.log(13 * audio + 0.6)
               }pt cornflowerblue`
             : shadows[3],
+          marginBottom: '1.5vh',
         }}
       >
         {props.isAddParticipant ? (
@@ -73,6 +74,7 @@ const Participant = (props: ParticipantProps) => {
               width: "100%",
               height: "100%",
               borderRadius: isMobile ? 35 : 50,
+              
             }}
           >
             <div
@@ -80,6 +82,7 @@ const Participant = (props: ParticipantProps) => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
+               
                 height: isMobile ? 80 : 112,
               }}
             >
@@ -94,6 +97,7 @@ const Participant = (props: ParticipantProps) => {
               width: "100%",
               height: "100%",
               borderRadius: isMobile ? 35 : 50,
+              
               opacity:
                 props.audioTrack === undefined && !props.userData.muted
                   ? 0.3
@@ -113,6 +117,7 @@ const Participant = (props: ParticipantProps) => {
               borderRadius: "50%",
               alignItems: "center",
               justifyContent: "center",
+              
             }}
           >
             <div className={classes.mute}>

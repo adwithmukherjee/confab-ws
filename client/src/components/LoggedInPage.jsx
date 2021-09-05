@@ -53,7 +53,7 @@ function LoggedInUI({ children }) {
                 handleLogout();
               }}
             >
-              Logout
+              Log Out
             </MenuItem>
           </Menu>
         </Toolbar>

@@ -343,3 +343,23 @@ export function ConfabTitleWithTagline({ titleStyle }) {
     </div>
   );
 }
+
+
+export function ConfabTitleWithoutSlogan({ titleStyle }) {
+  return (
+    <div>
+      <Typography
+        variant="h1"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <ConfabTitle style={titleStyle} />
+      </Typography>
+      
+    </div>
+  );
+}

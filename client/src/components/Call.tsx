@@ -37,7 +37,7 @@ import {
   storage,
   updateUserPhotoURL,
 } from "../api/firebase";
-import { ConfabTitleWithTagline } from "../pages/WaitlistPage";
+import { ConfabTitleWithoutSlogan } from "../pages/WaitlistPage";
 const titleImg = require("../assets/title.svg");
 
 const client = AgoraRTC.createClient({ codec: "h264", mode: "rtc" });
@@ -319,7 +319,7 @@ const Call = (props: CallProps) => {
               ></SnackbarContent>
             </Snackbar>
           )}
-          <ConfabTitleWithTagline titleStyle={{}} />
+          <ConfabTitleWithoutSlogan titleStyle={{}} />
           <div
             style={
               {
