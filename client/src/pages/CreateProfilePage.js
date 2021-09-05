@@ -74,7 +74,7 @@ const CreateProfilePage = () => {
           // transform: isMobile ? "translate(-10%)" : "none",
           ...style,
         }}
-        alt="CONFAB"
+        alt="AIRWAVE"
       />
     );
   }
@@ -165,7 +165,7 @@ const CreateProfilePage = () => {
             }}
           >
             Your name and profile picture is how others will know it's you in
-            Confab. This will be the only time you can edit your name yourself.
+            Airwave. This will be the only time you can edit your name yourself.
           </div>
         </div>
 

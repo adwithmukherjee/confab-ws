@@ -148,7 +148,7 @@ const Call = (props: CallProps) => {
         style={{
           maxWidth: isMobile ? "80%" : "100%",
         }}
-        alt="CONFAB"
+        alt="AIRWAVE"
       />
     );
   }
@@ -303,7 +303,7 @@ const Call = (props: CallProps) => {
                       rel="noreferrer"
                       style={{ color: blue[800] }}
                     >
-                      Get the Confab Calendar Add-on to schedule rooms directly
+                      Get the Airwave Calendar Add-on to schedule rooms directly
                       from Google Calendar!
                     </a>
                     <IconButton
