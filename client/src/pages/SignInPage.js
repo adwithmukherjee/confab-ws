@@ -75,7 +75,7 @@ const SignInPage = () => {
         >
           <div>
             By clicking 'Sign In With Google', you acknowledge that you have
-            read and understood, and agree to Confab’s{" "}
+            read and understood, and agree to Airwave’s{" "}
             <a href="/terms-of-service.html" style={{ color: blue[600] }}>
               Terms{" "}
             </a>

@@ -13,9 +13,9 @@ import grey from "@material-ui/core/colors/grey";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import React, { useState } from "react";
 import { isMobile } from "react-device-detect";
-import titleImg from "../assets/title.svg";
+import titleImg from "../assets/logo.png";
 import logo from "../assets/logo.svg";
-import heroImg from "../assets/hero-img.png";
+import heroImg from "../assets/product-screenshot.png";
 // import { addToWaitlist } from "../firebase";
 
 const WaitlistPage = () => {
@@ -177,7 +177,7 @@ const WaitlistPage = () => {
       </div>
       <img
         src={heroImg}
-        alt="Confab screenshots"
+        alt="Airwave screenshots"
         style={{
           maxWidth: isMobile ? "95%" : "60%",
           marginTop: isMobile ? 0 : "2vh",
@@ -195,7 +195,7 @@ const WaitlistPage = () => {
           }}
         >
           <li className={`custom-list audio`}>
-            With Confab's drop-in audio conferencing, it's now easier than ever
+            With Airwave's drop-in audio conferencing, it's now easier than ever
             to have productive, efficient, and focused meetings
           </li>
           <li className={`custom-list cal`}>
@@ -206,7 +206,7 @@ const WaitlistPage = () => {
               rel="noreferrer"
               style={{ color: blue[700] }}
             >
-              Confab Workspace add-on
+              Airwave Workspace add-on
             </a>{" "}
             and join on your desktop or mobile browser
           </li>
@@ -215,7 +215,7 @@ const WaitlistPage = () => {
             meeting
           </li>
           <li className={`custom-list person`}>
-            Confab is designed to give you the mobility and flexibility you need
+            Airwave is designed to give you the mobility and flexibility you need
             for hybrid work
           </li>
         </ul>
@@ -303,13 +303,15 @@ function ConfabTitle({ style }) {
     <img
       src={titleImg}
       style={{
-        maxWidth: isMobile ? "95%" : "100%",
+        maxWidth: isMobile ? "85%" : "60%",
         margin: "auto",
+        marginTop: "2vh",
+        marginBottom: "3vh",
 
         //transform: isMobile ? "translate(-10%)" : "none",
         ...style,
       }}
-      alt="CONFAB"
+      alt="AIRWAVE"
     />
   );
 }
