@@ -13,7 +13,7 @@ import grey from "@material-ui/core/colors/grey";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import React, { useState } from "react";
 import { isMobile } from "react-device-detect";
-import titleImg from "../assets/logo.png";
+import titleImg from "../assets/official-logo.svg";
 import logo from "../assets/logo.svg";
 import heroImg from "../assets/product-screenshot.png";
 // import { addToWaitlist } from "../firebase";
@@ -338,6 +338,7 @@ export function ConfabTitleWithTagline({ titleStyle }) {
           marginBottom: "2em",
           textAlign: "center",
           fontSize: isMobile ? 15 : 25,
+          color: "#414141",
         }}
       >
         Work at the speed of sound
