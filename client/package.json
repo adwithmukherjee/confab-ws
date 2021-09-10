@@ -100,7 +100,8 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "md2html": "showdown makehtml -i src/assets/TermsOfService.md -o public/terms-of-service.html && showdown makehtml -i src/assets/PrivacyPolicy.md -o public/privacy-policy.html"
   },
   "eslintConfig": {
     "extends": [

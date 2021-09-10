@@ -30,12 +30,12 @@ const sockets = require("./sockets")(io);
 io.on("connection", sockets);
 // In dev mode just hide hide app.uss(... ) below
 
-// app.use(express.static(path.join(__dirname, "./client/build")));
+app.use(express.static(path.join(__dirname, "./client/build")));
 
 app.get("/contact-us", (_req, res) => {
   res.redirect("https://bigmesslabs.notion.site/Contact-Us-fe070dbeb780434eb2039858480af6c7");
 });
-app.get("*", (req: any, res: any) => {
+app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/client/build/index.html"));
 });
 server.listen(PORT, () => console.log("App was started at port : " + PORT));
