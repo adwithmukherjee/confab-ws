@@ -9,6 +9,8 @@ var firebase_admin_1 = __importDefault(require("firebase-admin"));
 var path_1 = __importDefault(require("path"));
 var serviceAccount = require("./secret/huddle-7dff8-firebase-adminsdk-vnj3n-05c2a68ad5.json");
 var cors_1 = __importDefault(require("cors"));
+var socket_io_1 = require("socket.io");
+var http_1 = __importDefault(require("http"));
 var PORT = process.env.PORT || 8000;
 var app = express_1.default();
 app.use(heroku_ssl_redirect_1.default());
@@ -17,8 +19,8 @@ firebase_admin_1.default.initializeApp({
     credential: firebase_admin_1.default.credential.cert(serviceAccount),
     databaseURL: "https://huddle-7dff8.firebaseio.com",
 });
-var server = require("http").createServer(app);
-var io = require("socket.io")(server, {
+var server = http_1.default.createServer(app);
+var io = new socket_io_1.Server(server, {
     cors: {
         origin: "*",
         methods: ["GET", "POST"],
