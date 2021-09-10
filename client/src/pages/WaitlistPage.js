@@ -362,7 +362,7 @@ export function ConfabTitleWithoutSlogan({ titleStyle }) {
       >
         <ConfabTitle style={titleStyle} />
       </Typography>
-      
+
     </div>
   );
 }
