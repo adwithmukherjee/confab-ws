@@ -131,7 +131,8 @@
     "@types/react": "^17.0.18",
     "@types/react-draft-wysiwyg": "^1.13.3",
     "@types/react-router-dom": "^5.1.8",
-    "prettier": "2.3.2"
+    "prettier": "2.3.2",
+    "showdown": "^1.9.1"
   },
   "jest": {
     "roots": [
