@@ -671,6 +671,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: "scroll",
   },
   qrCodeDisplayStyle: {
+    backgroundColor: "#5B7992",
     flexDirection: "column",
     //width: isMobile ? "100%" : "50%",
     justifyContent: "flex-start",
@@ -679,10 +680,12 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexWrap: "wrap",
     "& > *": {
-      margin: theme.spacing(2),
-      width: theme.spacing(14),
-      height: theme.spacing(10),
+      //margin: theme.spacing(2),
+      // width: theme.spacing(14),
+      // height: theme.spacing(10),
     },
+    padding: "15px",
+    borderRadius: "20px",
   },
   participant: {
     //borderStyle:"solid",
@@ -745,8 +748,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     overflow: "clip",
-    height: "85px",
-    width: "85px",
+    height: "60px",
+    width: "60px",
+    padding: "8px",
+    borderRadius: "10px",
+    marginBottom: "15px",
   },
   modal: {
     position: "absolute",
@@ -775,3 +781,4 @@ const useStyles = makeStyles((theme) => ({
 export { useStyles };
 
 export default Call;
+
