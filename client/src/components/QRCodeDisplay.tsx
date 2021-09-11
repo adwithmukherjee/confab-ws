@@ -23,13 +23,14 @@ const QRCodeDisplay = (props: QRCodeDisplayProps) => {
           </Paper>
           <div
             style={{
-              width: 250,
-              lineHeight: "20px",
+              width: 120,
               textAlign: "center",
-              fontSize: "13px",
+              fontSize: "10px",
+              fontWeight: "bold",
+              color: "white",
             }}
           >
-            Point your camera at the QR code to join this room on your phone.
+            Scan to join this room on your phone!
           </div>
         </div>
       </div>
