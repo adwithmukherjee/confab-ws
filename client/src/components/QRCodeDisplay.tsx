@@ -18,18 +18,19 @@ const QRCodeDisplay = (props: QRCodeDisplayProps) => {
           <Paper elevation={3} className={classes.qrCodeStyle}>
             <QRCode
               style={{ width: "100%", height: "100%" }}
-              value={`https://confab.bigmesslabs.com/call/${props.channel}`}
+              value={window.location.href}
             />
           </Paper>
           <div
             style={{
-              width: 250,
-              lineHeight: "20px",
+              width: 120,
               textAlign: "center",
-              fontSize: "13px",
+              fontSize: "10px",
+              fontWeight: "bold",
+              color: "white",
             }}
           >
-            Point your camera at the QR code to join this room on your phone.
+            Scan to join this room on your phone!
           </div>
         </div>
       </div>
