@@ -659,7 +659,7 @@ const useStyles = makeStyles((theme) => ({
       // width: theme.spacing(14),
       // height: theme.spacing(10),
     },
-    margin: "5em auto 0 5em",
+    margin: "5.3em auto 0 0",
     padding: "1.5em 1em 1em 1em",
     borderRadius: "20px",
   },
