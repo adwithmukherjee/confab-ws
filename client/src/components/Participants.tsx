@@ -5,6 +5,7 @@ import { UserObject, useStyles } from "./Call";
 import { AgoraUserObject } from "./Call";
 import { Snackbar } from "@material-ui/core";
 import { IAgoraRTCRemoteUser, ILocalAudioTrack } from "agora-rtc-sdk-ng";
+import { isMobile } from "react-device-detect";
 
 export interface ParticipantsProps {
   me: UserObject | undefined;
@@ -76,7 +77,7 @@ const Participants = (props: ParticipantsProps) => {
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "repeat(4, 0fr)",
+        gridTemplateColumns: isMobile ? "repeat(2, 0fr)" : "repeat(4, 0fr)",
       }}
     >
       {/* {users &&

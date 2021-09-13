@@ -659,7 +659,7 @@ const useStyles = makeStyles((theme) => ({
       // width: theme.spacing(14),
       // height: theme.spacing(10),
     },
-    margin: "7em auto 0 5em",
+    margin: "5em auto 0 5em",
     padding: "1.5em 1em 1em 1em",
     borderRadius: "20px",
   },
@@ -772,7 +772,7 @@ const useStyles = makeStyles((theme) => ({
   },
   callroomParticipantsContainer: {
     width: isMobile ? "100%" : "60%",
-    padding: "10vh",
+    padding: isMobile ? "6vh" : "10vh",
   },
   callroomQRInfotip: {
     textAlign: "center",
@@ -782,8 +782,8 @@ const useStyles = makeStyles((theme) => ({
     padding: "0 1em 0 1em",
   },
   callroomAirwaveTitle: {
-    maxWidth: isMobile ? "25%" : "10%",
-    margin: "1.5em 0 0 3em",
+    maxWidth: isMobile ? "80%" : "15%",
+    margin: "1.5em 0 0 2em",
   },
   callroomMeetingTitle: {
     textAlign: "center",
@@ -807,7 +807,7 @@ const useStyles = makeStyles((theme) => ({
   },
   callroomAddonContainer: {
     display: "flex",
-    margin: "0 0 0 1.5em",
+    margin: "0 0 0 2em",
     //cursor: "pointer",
   },
   callroomAddonInfotip: {
