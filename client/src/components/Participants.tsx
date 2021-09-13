@@ -20,11 +20,13 @@ export interface ParticipantsProps {
 
 const getGridTemplateColumns = (numberOfParticipants: number): string => {
   if (numberOfParticipants === 1) {
-    return "1fr";
+    return "0fr";
   } else if (numberOfParticipants === 2) {
-    return "1fr 1fr";
+    return "0fr 0fr";
+  } else if (numberOfParticipants === 3) {
+    return "0fr  0fr 0fr";
   } else {
-    return "1fr 1fr 1fr";
+    return "1fr 1fr 1fr 1fr";
   }
 };
 
@@ -40,6 +42,8 @@ const Participants = (props: ParticipantsProps) => {
   const addParticipant = 1;
   const numberOfParticipants =
     meParticipant + addParticipant + (Object.keys(users).length ?? 0);
+
+  //Remove this once redesign is finalized
   const gridTemplateColumns = getGridTemplateColumns(numberOfParticipants);
 
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
@@ -72,7 +76,7 @@ const Participants = (props: ParticipantsProps) => {
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: gridTemplateColumns,
+        gridTemplateColumns: "repeat(4, 0fr)",
       }}
     >
       {/* {users &&

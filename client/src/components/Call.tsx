@@ -10,7 +10,7 @@ import { isMobile } from "react-device-detect";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
-import { IconButton, SnackbarContent } from "@material-ui/core";
+import { Divider, IconButton, SnackbarContent } from "@material-ui/core";
 import { AiFillCamera } from "react-icons/ai";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import "./bottomsheetStyle.css";
@@ -38,8 +38,11 @@ import {
   updateUserPhotoURL,
 } from "../api/firebase";
 import { ConfabTitleWithoutSlogan } from "../pages/WaitlistPage";
-const titleImg = require("../assets/title.svg");
 
+const titleImg = require("../assets/official-logo.svg").default;
+const muteIcon = require("../assets/mute.svg").default;
+const unmuteIcon = require("../assets/unmute.svg").default;
+const addOnIcon = require("../assets/add-on.svg").default;
 const client = AgoraRTC.createClient({ codec: "h264", mode: "rtc" });
 
 export interface UserObject {
@@ -264,166 +267,111 @@ const Call = (props: CallProps) => {
       </audio>
       <div className="landing-container-1">
         <div className={classes.root}>
-          {!isMobile && (
-            <Snackbar
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              message="ass"
-              color="blue"
-              open={upsellBannerOpen}
-              style={{ padding: 0 }}
-              onClose={handleCloseUpsellSnackbar}
-            >
-              <SnackbarContent
-                style={{
-                  backgroundColor: "rgba(66,133,244,0.2)",
-                  color: blue[800],
-                  padding: 0,
-                }}
-                action={
-                  <div
-                    style={{
-                      //maxWidth: "23vw",
-                      maxWidth: "25vw",
-                      display: "flex",
-                      marginLeft: "-1vw",
-                      alignItems: "center",
-
-                      padding: 10,
-                      paddingLeft: 15,
-                      cursor: "pointer",
-                    }}
-                  >
-                    <EventIcon style={{ marginRight: 15, color: blue[900] }} />
-                    <a
-                      href="https://workspace.google.com/marketplace/app/confab/192926803111"
-                      target="_blank"
-                      rel="noreferrer"
-                      style={{ color: blue[800] }}
-                    >
-                      Get the Airwave Calendar Add-on to schedule rooms directly
-                      from Google Calendar!
-                    </a>
-                    <IconButton
-                      color="primary"
-                      onClick={() => {
-                        setUpsellBannerOpen(false);
-                      }}
-                    >
-                      <CancelIcon />
-                    </IconButton>
-                  </div>
-                }
-              ></SnackbarContent>
-            </Snackbar>
-          )}
-          <ConfabTitleWithoutSlogan titleStyle={{}} />
-          <div
-            style={
-              {
-                //position: "fixed",
-                //top: isMobile ? 100 : 200,
-              }
-            }
-          >
-            {calendarEvent && (
-              <h3 style={{ textAlign: "center" }}>{calendarEvent?.summary}</h3>
-            )}
-          </div>
-          <BottomSheet
-            open={localOpen}
-            onDismiss={() => setLocalOpen(false)}
-            snapPoints={({ minHeight, maxHeight }) => [minHeight, maxHeight]}
-            scrollLocking={false}
-            header={
-              <div
-                style={{
-                  flexDirection: "row",
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-              >
+          <div className={classes.callroomBody}>
+            <img
+              src={titleImg}
+              className={classes.callroomAirwaveTitle}
+              alt="AIRWAVE"
+            />
+            <div>
+              {calendarEvent && (
+                <h3 style={{ textAlign: "center" }}>
+                  {calendarEvent?.summary}
+                </h3>
+              )}
+            </div>
+            <BottomSheet
+              open={localOpen}
+              onDismiss={() => setLocalOpen(false)}
+              snapPoints={({ minHeight, maxHeight }) => [minHeight, maxHeight]}
+              scrollLocking={false}
+              header={
                 <div
                   style={{
-                    flexDirection: "column",
+                    flexDirection: "row",
                     display: "flex",
-                    alignSelf: "center",
-                    alignItems: "flex-start",
-                    marginLeft: 20,
+                    justifyContent: "space-between",
                   }}
                 >
                   <div
                     style={{
-                      fontSize: "25px",
-                      lineHeight: "40px",
+                      flexDirection: "column",
+                      display: "flex",
+                      alignSelf: "center",
+                      alignItems: "flex-start",
+                      marginLeft: 20,
                     }}
                   >
-                    My Notepad
-                  </div>
-                  {localUser.user && <div>{localUser.user.email}</div>}
-                </div>
-                <div style={{ display: "flex" }}>
-                  <Paper
-                    elevation={0}
-                    className={classes.paper}
-                    style={{
-                      width: "50px",
-                      height: "50px",
-                      borderRadius: 22,
-                      marginRight: 20,
-                      boxShadow: "none",
-                    }}
-                  >
-                    <label htmlFor="single">
-                      <img
-                        src={imageURL}
-                        alt=""
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          borderRadius: 22,
-                        }}
-                      ></img>
-                    </label>
-                    <input
-                      type="file"
-                      id="single"
-                      accept="image/*"
-                      style={{
-                        width: 0,
-                        height: 0,
-                        position: "absolute",
-                        borderWidth: 0,
-                        border: "none",
-                        outline: 0,
-                      }}
-                      onChange={onImageChange}
-                    />
                     <div
                       style={{
-                        position: "absolute",
-                        bottom: 0,
-                        right: 0,
-                        display: "flex",
-                        width: 20,
-                        height: 20,
-                        borderRadius: "50%",
-                        alignItems: "center",
-                        justifyContent: "center",
+                        fontSize: "25px",
+                        lineHeight: "40px",
                       }}
                     >
-                      <div className={classes.editPicture}>
-                        <AiFillCamera />
-                      </div>
+                      My Notepad
                     </div>
-                  </Paper>
+                    {localUser.user && <div>{localUser.user.email}</div>}
+                  </div>
+                  <div style={{ display: "flex" }}>
+                    <Paper
+                      elevation={0}
+                      className={classes.paper}
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        borderRadius: 22,
+                        marginRight: 20,
+                        boxShadow: "none",
+                      }}
+                    >
+                      <label htmlFor="single">
+                        <img
+                          src={imageURL}
+                          alt=""
+                          style={{
+                            width: "50px",
+                            height: "50px",
+                            borderRadius: 22,
+                          }}
+                        ></img>
+                      </label>
+                      <input
+                        type="file"
+                        id="single"
+                        accept="image/*"
+                        style={{
+                          width: 0,
+                          height: 0,
+                          position: "absolute",
+                          borderWidth: 0,
+                          border: "none",
+                          outline: 0,
+                        }}
+                        onChange={onImageChange}
+                      />
+                      <div
+                        style={{
+                          position: "absolute",
+                          bottom: 0,
+                          right: 0,
+                          display: "flex",
+                          width: 20,
+                          height: 20,
+                          borderRadius: "50%",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <div className={classes.editPicture}>
+                          <AiFillCamera />
+                        </div>
+                      </div>
+                    </Paper>
+                  </div>
                 </div>
-              </div>
-            }
-          >
-            {/* <textarea
+              }
+            >
+              {/* <textarea
                 className="prof-description"
                 style={{
                   height: "30vh",
@@ -438,117 +386,117 @@ const Call = (props: CallProps) => {
                 value={notes}
                 onChange={updateProfileField}
               ></textarea> */}
-            <div
-              style={{
-                width: "90%",
-                height: "100%",
-                margin: "auto",
-              }}
-            >
-              <Editor
-                toolbar={{
-                  options: ["link", "emoji"],
-                  link: { defaultTargetOption: "_blank" },
-                }}
-                editorState={editorState}
-                wrapperStyle={{ height: "50vh" }}
-                //editorStyle={{ height: "100%", border: "solid" }}
-                placeholder="Add publicly visible comments, links, questions, and more here..."
-                wrapperClassName="wrapper-class"
-                editorClassName="editor-class"
-                onEditorStateChange={(edited) => {
-                  setEditorState(edited);
-                  // updateProfileField(
-                  //   draftToHtml(convertToRaw(edited.getCurrentContent()))
-                  // );
-                  // console.log(
-                  //   draftToHtml(convertToRaw(editorState.getCurrentContent()))
-                  // );
-                }}
-              >
-                <textarea
-                  disabled
-                  style={{
-                    height: "30vh",
-                    margin: 20,
-                    fontSize: "22px",
-                    width: "-webkit-fill-available",
-                    color: "rgb(40,40,40)",
-                    wordBreak: "break-word",
-                    overflowY: "auto",
-                    border: "solid",
-                  }}
-                  value={draftToHtml(
-                    convertToRaw(editorState.getCurrentContent())
-                  )}
-                ></textarea>
-              </Editor>
-            </div>
-          </BottomSheet>
-          <BottomSheet
-            open={remoteOpen}
-            onDismiss={() => setRemoteOpen(false)}
-            snapPoints={({ minHeight, maxHeight }) => [minHeight, maxHeight]}
-            scrollLocking={false}
-            header={
               <div
                 style={{
-                  flexDirection: "row",
-                  display: "flex",
-                  justifyContent: "space-between",
+                  width: "90%",
+                  height: "100%",
+                  margin: "auto",
                 }}
               >
-                <div
-                  style={{
-                    flexDirection: "column",
-                    display: "flex",
-                    alignSelf: "center",
-                    alignItems: "flex-start",
-                    marginLeft: 20,
+                <Editor
+                  toolbar={{
+                    options: ["link", "emoji"],
+                    link: { defaultTargetOption: "_blank" },
+                  }}
+                  editorState={editorState}
+                  wrapperStyle={{ height: "50vh" }}
+                  //editorStyle={{ height: "100%", border: "solid" }}
+                  placeholder="Add publicly visible comments, links, questions, and more here..."
+                  wrapperClassName="wrapper-class"
+                  editorClassName="editor-class"
+                  onEditorStateChange={(edited) => {
+                    setEditorState(edited);
+                    // updateProfileField(
+                    //   draftToHtml(convertToRaw(edited.getCurrentContent()))
+                    // );
+                    // console.log(
+                    //   draftToHtml(convertToRaw(editorState.getCurrentContent()))
+                    // );
                   }}
                 >
-                  <div style={{ fontSize: "25px", lineHeight: "40px" }}>
-                    {selectedUser &&
-                      selectedUser.user &&
-                      selectedUser.user.displayName + "'s Notepad"}
-                  </div>
-                  <div>
-                    {selectedUser &&
-                      selectedUser.user &&
-                      selectedUser.user.email}
-                  </div>
-                </div>
-                <div style={{ display: "flex" }}>
-                  <Paper
-                    elevation={0}
-                    className={classes.paper}
+                  <textarea
+                    disabled
                     style={{
-                      width: "50px",
-                      height: "50px",
-                      borderRadius: 22,
-                      marginRight: 20,
+                      height: "30vh",
+                      margin: 20,
+                      fontSize: "22px",
+                      width: "-webkit-fill-available",
+                      color: "rgb(40,40,40)",
+                      wordBreak: "break-word",
+                      overflowY: "auto",
+                      border: "solid",
+                    }}
+                    value={draftToHtml(
+                      convertToRaw(editorState.getCurrentContent())
+                    )}
+                  ></textarea>
+                </Editor>
+              </div>
+            </BottomSheet>
+            <BottomSheet
+              open={remoteOpen}
+              onDismiss={() => setRemoteOpen(false)}
+              snapPoints={({ minHeight, maxHeight }) => [minHeight, maxHeight]}
+              scrollLocking={false}
+              header={
+                <div
+                  style={{
+                    flexDirection: "row",
+                    display: "flex",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <div
+                    style={{
+                      flexDirection: "column",
+                      display: "flex",
+                      alignSelf: "center",
+                      alignItems: "flex-start",
+                      marginLeft: 20,
                     }}
                   >
-                    <img
-                      src={
-                        selectedUser &&
+                    <div style={{ fontSize: "25px", lineHeight: "40px" }}>
+                      {selectedUser &&
                         selectedUser.user &&
-                        selectedUser.user.photoURL
-                      }
-                      alt=""
+                        selectedUser.user.displayName + "'s Notepad"}
+                    </div>
+                    <div>
+                      {selectedUser &&
+                        selectedUser.user &&
+                        selectedUser.user.email}
+                    </div>
+                  </div>
+                  <div style={{ display: "flex" }}>
+                    <Paper
+                      elevation={0}
+                      className={classes.paper}
                       style={{
                         width: "50px",
                         height: "50px",
                         borderRadius: 22,
+                        marginRight: 20,
                       }}
-                    ></img>
-                  </Paper>
+                    >
+                      <img
+                        src={
+                          selectedUser &&
+                          selectedUser.user &&
+                          selectedUser.user.photoURL
+                        }
+                        alt=""
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          borderRadius: 22,
+                        }}
+                      ></img>
+                    </Paper>
+                  </div>
                 </div>
-              </div>
-            }
-          >
-            {
-              /* <p
+              }
+            >
+              {
+                /* <p
                 className="prof-description"
                 style={{
                   height: "30vh",
@@ -562,76 +510,101 @@ const Call = (props: CallProps) => {
               >
                 {selectedUser && selectedUser.user.profile}
               </p> */
-              selectedUser && (
-                <div
-                  style={{
-                    height: "30vh",
-                    margin: 20,
-                    fontSize: "22px",
-                    width: "-webkit-fill-available",
-                    color: "rgb(40,40,40)",
-                    wordBreak: "break-word",
-                    overflowY: "auto",
-                    userSelect: "text",
+                selectedUser && (
+                  <div
+                    style={{
+                      height: "30vh",
+                      margin: 20,
+                      fontSize: "22px",
+                      width: "-webkit-fill-available",
+                      color: "rgb(40,40,40)",
+                      wordBreak: "break-word",
+                      overflowY: "auto",
+                      userSelect: "text",
+                    }}
+                    dangerouslySetInnerHTML={{
+                      __html:
+                        selectedUser && selectedUser.user
+                          ? selectedUser.user.profile
+                          : "",
+                    }}
+                  ></div>
+                )
+              }
+            </BottomSheet>
+            <h3 className={classes.callroomMeetingTitle}>
+              Meeting Title goes here
+            </h3>
+            <div className={classes.callroomContainer}>
+              <div className={classes.callroomParticipantsContainer}>
+                <Participants
+                  me={localUser}
+                  localAudioTrack={props.localAudioTrack}
+                  users={remoteUsers}
+                  userData={remoteUserData}
+                  setLocalOpen={(val: boolean) => setLocalOpen(val)}
+                  setRemoteOpen={(val: boolean) => setRemoteOpen(val)}
+                  setSelectedUser={(val: UserObject | undefined) => {
+                    if (val) {
+                      setSelectedUser(val);
+                    }
                   }}
-                  dangerouslySetInnerHTML={{
-                    __html:
-                      selectedUser && selectedUser.user
-                        ? selectedUser.user.profile
-                        : "",
-                  }}
-                ></div>
-              )
-            }
-          </BottomSheet>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              marginTop: isMobile ? "2vh" : "3vh",
-              overflow: "scroll",
-              marginBottom: isMobile ? 20 : 100,
-              maxHeight: "65vh",
-            }}
-          >
-            <div>
-              <div style={{ height: 50 }}></div>
-              <Participants
-                me={localUser}
-                localAudioTrack={props.localAudioTrack}
-                users={remoteUsers}
-                userData={remoteUserData}
-                setLocalOpen={(val: boolean) => setLocalOpen(val)}
-                setRemoteOpen={(val: boolean) => setRemoteOpen(val)}
-                setSelectedUser={(val: UserObject | undefined) => {
-                  if (val) {
-                    setSelectedUser(val);
-                  }
-                }}
-              />
+                />
+              </div>
+              {!isMobile && (
+                <div className={classes.callroomQRContainer}>
+                  <QRCodeDisplay channel={channel} />
+                </div>
+              )}
             </div>
+          </div>
 
-            {!isMobile && <QRCodeDisplay channel={channel} />}
-          </div>
-          {/* <div style={{ display: "flex", height: "100px", width: "100%" }}></div> */}
-          <div
-            style={{
-              display: "flex",
-              height: "100%",
-              width: "100%",
-              flex: 1,
-            }}
-          ></div>
-          <div className={classes.buttonGroup}>
-            <Button variant="outlined" onClick={leaveMeeting}>
-              {" "}
-              Leave{" "}
-            </Button>
-            <div style={{ width: 80 }}></div>
-            <Button variant="contained" color="secondary" onClick={handleMute}>
-              {localUser?.muted ? "Unmute" : "Mute"}
-            </Button>
-          </div>
+          <Paper className={classes.callroomBottomBar}>
+            {!isMobile && (
+              <div className={classes.callroomAddonContainer}>
+                <img src={addOnIcon} className={classes.callroomAddonIcon} />
+
+                <a
+                  className={classes.callroomAddonInfotip}
+                  href="https://workspace.google.com/marketplace/app/confab/192926803111"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Get the calendar add-on for one click scheduling
+                </a>
+              </div>
+            )}
+
+            <div className={classes.buttonGroup}>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={leaveMeeting}
+              >
+                {" "}
+                Leave{" "}
+              </Button>
+              <div style={{ width: 80 }}></div>
+              <Paper
+                elevation={1}
+                className={classes.callRoomMuteIconContainer}
+              >
+                {localUser?.muted ? (
+                  <img
+                    src={muteIcon}
+                    className={classes.callroomMuteIcon}
+                    onClick={handleMute}
+                  />
+                ) : (
+                  <img
+                    src={unmuteIcon}
+                    className={classes.callroomMuteIcon}
+                    onClick={handleMute}
+                  />
+                )}
+              </Paper>
+            </div>
+          </Paper>
         </div>
       </div>
     </div>
@@ -644,7 +617,7 @@ type ChannelParams = {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: isMobile ? "90%" : "50%",
+    width: isMobile ? "90%" : "100%",
     height: isMobile ? "95%" : "100%",
     margin: "auto",
     display: "flex",
@@ -672,19 +645,22 @@ const useStyles = makeStyles((theme) => ({
   },
   qrCodeDisplayStyle: {
     backgroundColor: "#5B7992",
+    width: "11em",
+    height: "11em",
     flexDirection: "column",
     //width: isMobile ? "100%" : "50%",
-    justifyContent: "flex-start",
+    // justifyContent: "flex-start",
     //justifyContent: "space-around",
-    alignItems: "center",
-    display: "flex",
+    // alignItems: "center",
+    // display: "inline-flex",
     flexWrap: "wrap",
     "& > *": {
       //margin: theme.spacing(2),
       // width: theme.spacing(14),
       // height: theme.spacing(10),
     },
-    padding: "15px",
+    margin: "7em auto 0 5em",
+    padding: "1.5em 1em 1em 1em",
     borderRadius: "20px",
   },
   participant: {
@@ -714,6 +690,13 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     boxShadow: theme.shadows[5],
   },
+  participantMuteIcon: {
+    width: "18px",
+    height: "18px",
+    borderRadius: "50%",
+    padding: "0.3em",
+    backgroundColor: "#F5F5F5",
+  },
   editPicture: {
     position: "fixed",
     zIndex: 2,
@@ -732,7 +715,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     display: "flex",
     lineHeight: 1.2,
-
     textAlign: "center",
   },
   paper: {
@@ -744,15 +726,15 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
   },
   qrCodeStyle: {
-    display: "flex",
+    // display: "flex",
     justifyContent: "center",
     alignItems: "center",
     overflow: "clip",
-    height: "60px",
-    width: "60px",
-    padding: "8px",
+    height: "7em",
+    width: "7em",
+    padding: "0.5em",
     borderRadius: "10px",
-    marginBottom: "15px",
+    margin: "0 auto 1em auto",
   },
   modal: {
     position: "absolute",
@@ -766,15 +748,83 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 4, 3),
   },
   buttonGroup: {
-    width: isMobile ? "100%" : "50%",
-    marginTop: "1vh",
+    width: isMobile ? "100%" : "60%",
+    //marginTop: "1vh",
     //borderStyle: "solid",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 40,
-    position: "fixed",
+    //marginLeft: "23%",
+    // position: "fixed",
+    // bottom: 0,
+  },
+  callroomBody: {
+    height: "85vh",
+    width: "inherit",
+    overflow: "scroll",
+  },
+  callroomContainer: {
+    width: "100%",
+    display: "flex",
+  },
+  callroomQRContainer: {
+    width: "40%",
+  },
+  callroomParticipantsContainer: {
+    width: isMobile ? "100%" : "60%",
+    padding: "10vh",
+  },
+  callroomQRInfotip: {
+    textAlign: "center",
+    fontSize: "13px",
+    fontWeight: "bold",
+    color: "white",
+    padding: "0 1em 0 1em",
+  },
+  callroomAirwaveTitle: {
+    maxWidth: isMobile ? "25%" : "10%",
+    margin: "1.5em 0 0 3em",
+  },
+  callroomMeetingTitle: {
+    textAlign: "center",
+    color: "#414141",
+    marginTop: 0,
+  },
+  callRoomMuteIconContainer: {
+    borderRadius: "50%",
+    padding: "0.5em 0.5em 0.4em 0.5em",
+    cursor: "pointer",
+    backgroundColor: "#F5F5F5",
+  },
+  callroomMuteIcon: {
+    width: "25px",
+    height: "25px",
+  },
+  callroomAddonIcon: {
+    width: "30px",
+    height: "30px",
+    marginRight: "0.5em",
+  },
+  callroomAddonContainer: {
+    display: "flex",
+    margin: "0 0 0 1.5em",
+    //cursor: "pointer",
+  },
+  callroomAddonInfotip: {
+    fontSize: "12px",
+    width: "13em",
+    color: "#5B7992",
+  },
+  callroomBottomBar: {
+    width: "100%",
+    height: "12vh",
+    display: "flex",
+    alignItems: "center",
+    //justifyContent: "center",
+    //borderTop: "rgba(0, 0, 0, 0.12) 1px solid",
     bottom: 0,
+    position: "fixed",
+    backgroundColor: "#F5F5F5",
   },
 }));
 
