@@ -14,6 +14,7 @@ const QRCodeDisplay = (props: QRCodeDisplayProps) => {
     return <div />;
   } else {
     return (
+
       <div className={classes.qrCodeDisplayStyle}>
         <Paper elevation={3} className={classes.qrCodeStyle}>
           <QRCode
