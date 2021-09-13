@@ -772,7 +772,7 @@ const useStyles = makeStyles((theme) => ({
   },
   callroomParticipantsContainer: {
     width: isMobile ? "100%" : "60%",
-    padding: isMobile ? "6vh" : "10vh",
+    padding: isMobile ? "5vh" : "10vh",
   },
   callroomQRInfotip: {
     textAlign: "center",
