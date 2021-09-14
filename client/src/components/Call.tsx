@@ -267,7 +267,7 @@ const Call = (props: CallProps) => {
       </audio>
       <div className="landing-container-1">
         <div className={classes.root}>
-          <div className={classes.callroomBody}>
+          <div className={classes.callroomTopBar}>
             <img
               src={titleImg}
               className={classes.callroomAirwaveTitle}
@@ -280,6 +280,9 @@ const Call = (props: CallProps) => {
                 </h3>
               )}
             </div>
+            <h3 className={classes.callroomMeetingTitle}>Meeting Title</h3>
+          </div>
+          <div className={classes.callroomBody}>
             <BottomSheet
               open={localOpen}
               onDismiss={() => setLocalOpen(false)}
@@ -532,9 +535,7 @@ const Call = (props: CallProps) => {
                 )
               }
             </BottomSheet>
-            <h3 className={classes.callroomMeetingTitle}>
-              Meeting Title goes here
-            </h3>
+
             <div className={classes.callroomContainer}>
               <div className={classes.callroomParticipantsContainer}>
                 <Participants
@@ -559,20 +560,22 @@ const Call = (props: CallProps) => {
             </div>
           </div>
 
-          <Paper className={classes.callroomBottomBar}>
+          <Paper elevation={3} className={classes.callroomBottomBar}>
             {!isMobile && (
-              <div className={classes.callroomAddonContainer}>
-                <img src={addOnIcon} className={classes.callroomAddonIcon} />
+              <a
+                className={classes.callroomAddonContainer}
+                href="https://workspace.google.com/marketplace/app/confab/192926803111"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <div className={classes.callroomAddonIconContainer}>
+                  <img src={addOnIcon} className={classes.callroomAddonIcon} />
+                </div>
 
-                <a
-                  className={classes.callroomAddonInfotip}
-                  href="https://workspace.google.com/marketplace/app/confab/192926803111"
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <p className={classes.callroomAddonInfotip}>
                   Get the calendar add-on for one click scheduling
-                </a>
-              </div>
+                </p>
+              </a>
             )}
 
             <div className={classes.buttonGroup}>
@@ -648,11 +651,7 @@ const useStyles = makeStyles((theme) => ({
     width: "11em",
     height: "11em",
     flexDirection: "column",
-    //width: isMobile ? "100%" : "50%",
-    // justifyContent: "flex-start",
-    //justifyContent: "space-around",
-    // alignItems: "center",
-    // display: "inline-flex",
+
     flexWrap: "wrap",
     "& > *": {
       //margin: theme.spacing(2),
@@ -664,11 +663,10 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "20px",
   },
   participant: {
-    //borderStyle:"solid",
     flexDirection: "column",
-    //width: isMobile ? "100%" : "50%",
+
     justifyContent: "flex-start",
-    //justifyContent: "space-around",
+
     alignItems: "center",
     display: "flex",
     position: "relative",
@@ -743,20 +741,16 @@ const useStyles = makeStyles((theme) => ({
     left: "50%",
     transform: `translate(-50%, -50%)`,
     backgroundColor: theme.palette.background.paper,
-    //border: '2px solid #000',
+
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
   buttonGroup: {
     width: isMobile ? "100%" : "60%",
-    //marginTop: "1vh",
-    //borderStyle: "solid",
+
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    //marginLeft: "23%",
-    // position: "fixed",
-    // bottom: 0,
   },
   callroomBody: {
     height: "85vh",
@@ -782,7 +776,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "0 1em 0 1em",
   },
   callroomAirwaveTitle: {
-    maxWidth: isMobile ? "80%" : "15%",
+    maxWidth: isMobile ? "80%" : "10%",
     margin: "1.5em 0 0 2em",
   },
   callroomMeetingTitle: {
@@ -800,6 +794,10 @@ const useStyles = makeStyles((theme) => ({
     width: "25px",
     height: "25px",
   },
+  callroomAddonIconContainer: {
+    display: "flex",
+    alignItems: "center",
+  },
   callroomAddonIcon: {
     width: "30px",
     height: "30px",
@@ -816,15 +814,19 @@ const useStyles = makeStyles((theme) => ({
     color: "#5B7992",
   },
   callroomBottomBar: {
+    zIndex: 1,
     width: "100%",
-    height: "12vh",
+    height: "10vh",
     display: "flex",
     alignItems: "center",
-    //justifyContent: "center",
-    //borderTop: "rgba(0, 0, 0, 0.12) 1px solid",
     bottom: 0,
     position: "fixed",
     backgroundColor: "#F5F5F5",
+    borderRadius: 0,
+  },
+  callroomTopBar: {
+    zIndex: 1,
+    width: "100%",
   },
 }));
 
