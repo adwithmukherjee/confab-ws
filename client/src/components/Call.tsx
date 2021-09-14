@@ -746,7 +746,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 4, 3),
   },
   buttonGroup: {
-    width: isMobile ? "100%" : "60%",
+    width: "100%",
 
     display: "flex",
     alignItems: "center",
@@ -805,8 +805,9 @@ const useStyles = makeStyles((theme) => ({
   },
   callroomAddonContainer: {
     display: "flex",
+    position: "fixed",
     margin: "0 0 0 2em",
-    //cursor: "pointer",
+    left: 0,
   },
   callroomAddonInfotip: {
     fontSize: "12px",
@@ -823,6 +824,7 @@ const useStyles = makeStyles((theme) => ({
     position: "fixed",
     backgroundColor: "#F5F5F5",
     borderRadius: 0,
+    justifyContent: "center",
   },
   callroomTopBar: {
     zIndex: 1,
