@@ -273,14 +273,11 @@ const Call = (props: CallProps) => {
               className={classes.callroomAirwaveTitle}
               alt="AIRWAVE"
             />
-            <div>
-              {calendarEvent && (
-                <h3 style={{ textAlign: "center" }}>
-                  {calendarEvent?.summary}
-                </h3>
-              )}
-            </div>
-            <h3 className={classes.callroomMeetingTitle}>Meeting Title</h3>
+            {calendarEvent && (
+              <h3 className={classes.callroomMeetingTitle}>
+                {calendarEvent?.summary}
+              </h3>
+            )}
           </div>
           <div className={classes.callroomBody}>
             <BottomSheet
