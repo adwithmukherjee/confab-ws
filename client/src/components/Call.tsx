@@ -648,8 +648,8 @@ const useStyles = makeStyles((theme) => ({
   },
   qrCodeDisplayStyle: {
     backgroundColor: "#5B7992",
-    width: "11em",
-    height: "11em",
+    width: "10em",
+    height: "10em",
     flexDirection: "column",
 
     flexWrap: "wrap",
@@ -658,8 +658,7 @@ const useStyles = makeStyles((theme) => ({
       // width: theme.spacing(14),
       // height: theme.spacing(10),
     },
-    margin: "5.3em auto 0 0",
-    padding: "1.5em 1em 1em 1em",
+    padding: "1em 0.5em 0.5em 0.5em",
     borderRadius: "20px",
   },
   participant: {
@@ -712,8 +711,10 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     display: "flex",
-    lineHeight: 1.2,
+    lineHeight: 1.4,
     textAlign: "center",
+    fontSize: "14px",
+    fontWeight: 500,
   },
   paper: {
     display: "flex",
@@ -728,11 +729,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     overflow: "clip",
-    height: "7em",
-    width: "7em",
+    height: "5em",
+    width: "5em",
     padding: "0.5em",
     borderRadius: "10px",
-    margin: "0 auto 1em auto",
+    margin: "0.5em auto 1em auto",
   },
   modal: {
     position: "absolute",
@@ -763,14 +764,15 @@ const useStyles = makeStyles((theme) => ({
   },
   callroomQRContainer: {
     width: "40%",
+    padding: "4.7em 0 0 9em",
   },
   callroomParticipantsContainer: {
     width: isMobile ? "100%" : "60%",
-    padding: isMobile ? "5vh" : "10vh",
+    padding: isMobile ? "1.5em" : "3em 3em 3em 9em",
   },
   callroomQRInfotip: {
     textAlign: "center",
-    fontSize: "13px",
+    fontSize: "12px",
     fontWeight: "bold",
     color: "white",
     padding: "0 1em 0 1em",
