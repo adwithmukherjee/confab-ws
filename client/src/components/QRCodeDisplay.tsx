@@ -14,12 +14,11 @@ const QRCodeDisplay = (props: QRCodeDisplayProps) => {
     return <div />;
   } else {
     return (
-
       <div className={classes.qrCodeDisplayStyle}>
         <Paper elevation={3} className={classes.qrCodeStyle}>
           <QRCode
             style={{ width: "100%", height: "100%" }}
-            value={`https://confab.bigmesslabs.com/call/${props.channel}`}
+            value={`${window.location.href}`}
           />
         </Paper>
         <div className={classes.callroomQRInfotip}>

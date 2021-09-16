@@ -278,6 +278,7 @@ const Call = (props: CallProps) => {
                 {calendarEvent?.summary}
               </h3>
             )}
+            {!calendarEvent && <div style={{ padding: "1em" }}></div>}
           </div>
           <div className={classes.callroomBody}>
             <BottomSheet
