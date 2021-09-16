@@ -1,29 +1,32 @@
 {
   "files": {
     "main.css": "/static/css/main.a48ba226.chunk.css",
-    "main.js": "/static/js/main.b45fa8c4.chunk.js",
-    "main.js.map": "/static/js/main.b45fa8c4.chunk.js.map",
+    "main.js": "/static/js/main.5e8ca3dc.chunk.js",
+    "main.js.map": "/static/js/main.5e8ca3dc.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.900dd88b.js",
     "runtime-main.js.map": "/static/js/runtime-main.900dd88b.js.map",
     "static/css/2.8e4e8e1f.chunk.css": "/static/css/2.8e4e8e1f.chunk.css",
-    "static/js/2.32a6478f.chunk.js": "/static/js/2.32a6478f.chunk.js",
-    "static/js/2.32a6478f.chunk.js.map": "/static/js/2.32a6478f.chunk.js.map",
+    "static/js/2.fbef0a40.chunk.js": "/static/js/2.fbef0a40.chunk.js",
+    "static/js/2.fbef0a40.chunk.js.map": "/static/js/2.fbef0a40.chunk.js.map",
     "index.html": "/index.html",
     "static/css/2.8e4e8e1f.chunk.css.map": "/static/css/2.8e4e8e1f.chunk.css.map",
     "static/css/main.a48ba226.chunk.css.map": "/static/css/main.a48ba226.chunk.css.map",
-    "static/js/2.32a6478f.chunk.js.LICENSE.txt": "/static/js/2.32a6478f.chunk.js.LICENSE.txt",
+    "static/js/2.fbef0a40.chunk.js.LICENSE.txt": "/static/js/2.fbef0a40.chunk.js.LICENSE.txt",
+    "static/media/add-on.svg": "/static/media/add-on.5e36d1cf.svg",
     "static/media/cal-icon2.e80483cd.png": "/static/media/cal-icon2.e80483cd.png",
     "static/media/logo.3bb3b6b6.svg": "/static/media/logo.3bb3b6b6.svg",
-    "static/media/official-logo.b1a0ab85.svg": "/static/media/official-logo.b1a0ab85.svg",
+    "static/media/mute.svg": "/static/media/mute.0a1ee42a.svg",
+    "static/media/official-logo.svg": "/static/media/official-logo.b1a0ab85.svg",
     "static/media/phone-icon.c409c032.png": "/static/media/phone-icon.c409c032.png",
     "static/media/product-screenshot.1754e2ae.png": "/static/media/product-screenshot.1754e2ae.png",
-    "static/media/title.svg": "/static/media/title.cc86d25d.svg"
+    "static/media/title.cc86d25d.svg": "/static/media/title.cc86d25d.svg",
+    "static/media/unmute.svg": "/static/media/unmute.c5032bff.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.900dd88b.js",
     "static/css/2.8e4e8e1f.chunk.css",
-    "static/js/2.32a6478f.chunk.js",
+    "static/js/2.fbef0a40.chunk.js",
     "static/css/main.a48ba226.chunk.css",
-    "static/js/main.b45fa8c4.chunk.js"
+    "static/js/main.5e8ca3dc.chunk.js"
   ]
 }
