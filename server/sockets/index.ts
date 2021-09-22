@@ -1,7 +1,7 @@
 import { userInfo } from "os";
 import { send } from "process";
 import { Server, Socket } from "socket.io";
-const events = require("../client/src/api/sockets/events.js");
+const events = require("../../client/src/api/sockets/events.js");
 
 const channels: {
   [key: string]: { users: { [key: string]: SocketUserObject } };

@@ -177,12 +177,12 @@ const Call = (props: CallProps) => {
   };
 
   const uploadImage = () => {
-    if (auth.currentUser && image) {
+    if (localUser.user && image) {
       console.log("uploading");
 
       const uploadTask = storage
         .ref()
-        .child("users/" + auth.currentUser.email)
+        .child("users/" + localUser.user.email)
         .put(image);
 
       uploadTask.then(() => {
@@ -834,4 +834,3 @@ const useStyles = makeStyles((theme) => ({
 export { useStyles };
 
 export default Call;
-

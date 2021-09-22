@@ -1,5 +1,3 @@
-const { model } = require("mongoose");
-
 //keys.js - figure out what set of credentials to return. Are we in prod or dev??
 if (process.env.NODE_ENV == "production") {
   //return prod set of keys

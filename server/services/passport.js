@@ -36,13 +36,20 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       //check to see if profile.id already exists in DB
       //we call done() in both to conclude the callback and tell passport the user's identity
+      console.log(profile);
       const existingUser = await User.findOne({ googleId: profile.id }); //query using mongoose. find first record with the same property as paramater obj. returns a Promise
       //Promise handling
 
       if (existingUser) {
         done(null, existingUser);
       } else {
-        const user = await new User({ googleId: profile.id }).save(); //promise handling. Once resolved, call done()
+        const user = await new User({
+          googleId: profile.id,
+          displayName: profile.displayName,
+          email: profile._json.email,
+          photoURL: profile._json.picture,
+          profile: "",
+        }).save(); //promise handling. Once resolved, call done()
         done(null, user);
       }
 

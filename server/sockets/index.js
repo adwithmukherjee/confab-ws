@@ -22,7 +22,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var events = require("../client/src/api/sockets/events.js");
+var events = require("../../client/src/api/sockets/events.js");
 var channels = {}; //CHANNEL IDs => CHANNEL DATA
 function convertFromSocketUser(user) {
     var socketId = user.socketId, active = user.active, rest = __rest(user, ["socketId", "active"]);

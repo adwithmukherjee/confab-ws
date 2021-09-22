@@ -7,27 +7,28 @@ import { isMobile } from "react-device-detect";
 import { ConfabTitleWithTagline, Footer } from "./WaitlistPage";
 import { Typography } from "@material-ui/core";
 import grey from "@material-ui/core/colors/grey";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { blue } from "@material-ui/core/colors";
 import Loading from "../components/Loading";
+import axios from "axios";
 
 const SignInPage = () => {
   const { setUser, setLoading, setNewUser } = useContext(UserContext);
-  const history = useHistory();
+  const location = useLocation();
 
-  const signIn = () => {
-    console.log("Signing In");
-    signInWithGoogle().then((user) => {
-      if (user.newUser) {
-        console.log("create pages");
+  // const signIn = () => {
+  //   console.log("Signing In");
+  //   signInWithGoogle().then((user) => {
+  //     if (user.newUser) {
+  //       console.log("create pages");
 
-        setUser(user.user);
-        setNewUser(true);
-      } else {
-        setUser(user.user);
-      }
-    });
-  };
+  //       (user.user);
+  //       setNewUser(true);
+  //     } else {
+  //       setUser(user.user);
+  //     }
+  //   });
+  // };
 
   return (
     <div
@@ -56,7 +57,19 @@ const SignInPage = () => {
             flexDirection: "column",
           }}
         >
-          <GoogleButton style={{ marginBottom: "1.5vh" }} onClick={signIn} />
+          <a href="/auth/google">
+            <GoogleButton
+              style={{ marginBottom: "1.5vh" }}
+              onClick={async () => {
+                const res = await axios.post("/api/prelogin", {
+                  url: location.pathname,
+                });
+                if (res.status === 200) {
+                  axios.get("/auth/google");
+                }
+              }}
+            />
+          </a>
           Sign in with your work email
         </Typography>
 

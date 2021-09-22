@@ -1,3 +1,4 @@
+import axios from "axios";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
@@ -91,35 +92,23 @@ const signInWithGoogle = async () => {
 };
 
 const signOut = async () => {
-  await auth.signOut();
+  await axios.get("/api/logout");
 };
 
 const createCall = () => {
-  const db = firebase.firestore();
-  const { email } = firebase.auth().currentUser;
-
-  const channel = new Promise((resolve, reject) => {
-    db.collection("meetings")
-      .add({
-        // ended: false,
-        // lastActive: new Date(),
-        creatorRef: db.doc("users/" + email),
-      })
-      .then((docRef) => {
-        db.collection("meetings")
-          .doc(docRef.id)
-          .collection("currentAttendees")
-          .doc(email)
-          .set({
-            isHost: true,
-          })
-          .then(() => {
-            resolve(docRef.id);
-          });
-      })
-      .catch((err) => {
-        reject(err);
-      });
+  const channel = new Promise(async (resolve, reject) => {
+    try {
+      const res = await axios.post("/api/create_meeting");
+      if (res.data) {
+        console.log(res.data.uid);
+        resolve(res.data.uid);
+      } else {
+        resolve(undefined);
+      }
+    } catch (err) {
+      console.log(err);
+      resolve(undefined);
+    }
   });
 
   return channel;
@@ -146,30 +135,12 @@ const getCalEventDetails = (channel) => {
   return meetingInfo;
 };
 
-const updateUserPhotoURL = (photoURL) => {
-  const db = firebase.firestore();
-  const { email } = firebase.auth().currentUser;
-  if (photoURL && photoURL !== "") {
-    db.collection("users").doc(email).set(
-      {
-        photoURL,
-      },
-      { merge: true }
-    );
-  }
+const updateUserPhotoURL = async (photoURL) => {
+  await axios.post("/api/update_photoURL", { photoURL });
 };
 
-const updateUserDisplayName = (displayName) => {
-  const db = firebase.firestore();
-  const { email } = firebase.auth().currentUser;
-  if (displayName && displayName !== "") {
-    db.collection("users").doc(email).set(
-      {
-        displayName,
-      },
-      { merge: true }
-    );
-  }
+const updateUserDisplayName = async (displayName) => {
+  await axios.post("/api/update_displayName", { displayName });
 };
 
 export {
