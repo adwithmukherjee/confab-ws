@@ -1,95 +1,13 @@
 import axios from "axios";
 import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
+
 import "firebase/compat/firestore";
 import "firebase/compat/storage";
 const keys = require("../keys");
 
 firebase.initializeApp(keys.FIREBASE_CONFIG);
 
-const auth = firebase.auth();
 const storage = firebase.storage();
-
-const getUser = (email) => {
-  const user = new Promise((resolve, reject) => {
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(email)
-      .get()
-      .then((doc) => {
-        resolve({ ...doc.data(), email });
-      })
-      .catch(() => {
-        resolve(undefined);
-      });
-  });
-
-  return user;
-};
-
-const signInWithGoogle = async () => {
-  const googleAuth = window.gapi.auth2.getAuthInstance();
-  const googleUser = await googleAuth.signIn();
-  const token = googleUser.getAuthResponse().id_token;
-
-  const credential = firebase.auth.GoogleAuthProvider.credential(token);
-
-  const provider = new firebase.auth.GoogleAuthProvider();
-  let userRecord = {};
-
-  const user = new Promise((resolve, reject) => {
-    firebase
-      .auth()
-      .setPersistence(
-        process.env.NODE_ENV === "production"
-          ? firebase.auth.Auth.Persistence.LOCAL //CHANGE THIS BACK TO LOCAL AFTER TESTING
-          : firebase.auth.Auth.Persistence.SESSION
-      )
-      .then(() => {
-        firebase
-          .auth()
-          .signInWithCredential(credential)
-          .then(({ user }) => {
-            console.log(user);
-            const { email, displayName, photoURL } = user;
-            userRecord = { displayName, profile: "", photoURL };
-
-            firebase
-              .firestore()
-              .collection("users")
-              .doc(email)
-              .get()
-              .then((doc) => {
-                if (doc.exists) {
-                  const val = { ...doc.data(), email };
-                  resolve({ newUser: false, user: val });
-                } else {
-                  firebase
-                    .firestore()
-                    .collection("users")
-                    .doc(email)
-                    .set(userRecord)
-                    .then(() => {
-                      const val = { ...userRecord, email };
-                      resolve({ newUser: true, user: val });
-                    });
-                }
-              });
-          })
-          .catch((err) => {
-            console.log(err);
-            resolve(undefined);
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-        resolve(undefined);
-      });
-  });
-
-  return user;
-};
 
 const signOut = async () => {
   await axios.get("/api/logout");
@@ -144,10 +62,7 @@ const updateUserDisplayName = async (displayName) => {
 };
 
 export {
-  auth,
   storage,
-  getUser,
-  signInWithGoogle,
   signOut,
   createCall,
   getCalEventDetails,

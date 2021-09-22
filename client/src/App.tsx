@@ -1,6 +1,5 @@
 import { useEffect, useState, useContext } from "react";
 import UserContext from "./context/UserContext";
-import { auth, getUser } from "./api/firebase";
 import {
   BrowserRouter as Router,
   Switch,
