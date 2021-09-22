@@ -1,7 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import useAgora from "../hooks/useAgora";
 import AgoraRTC from "agora-rtc-sdk-ng";
-import keys from "../keys";
 import { RtmTokenBuilder, RtcRole, RtcTokenBuilder } from "agora-access-token";
 import { useParams, useHistory, Prompt } from "react-router-dom";
 import UserContext from "../context/UserContext";
@@ -9,6 +8,7 @@ import Call, { AgoraUserObject, UserObject } from "../components/Call";
 import { socket } from "../api/sockets/sockets";
 import events from "../api/sockets/events";
 import Loading from "../components/Loading";
+const keys: any = require("../keys");
 
 function convertFromAgoraUser(user: AgoraUserObject): UserObject | undefined {
   const { audioTrack, ...rest } = user;
