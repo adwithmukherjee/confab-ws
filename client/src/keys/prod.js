@@ -1,4 +1,4 @@
-const keys = {
+module.exports = {
   AGORA_APP_ID: process.env.AGORA_APP_ID,
   AGORA_SECRET: process.env.AGORA_SECRET,
 
@@ -12,5 +12,3 @@ const keys = {
     measurementId: process.env.FIREBASE_MEASUREMENT_ID,
   },
 };
-
-export default keys;

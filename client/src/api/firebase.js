@@ -3,7 +3,7 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import "firebase/compat/storage";
-import keys from "../keys";
+const keys = require("../keys");
 
 firebase.initializeApp(keys.FIREBASE_CONFIG);
 

@@ -66,11 +66,11 @@ const CallPage = () => {
   const history = useHistory();
 
   const [channel] = useState(channelId);
-  const [appid] = useState(keys.AGORA_APP_ID);
+  const [appid] = useState("37819f409bdf4c9f9405b89172a0155e");
   const [token] = useState(
     RtcTokenBuilder.buildTokenWithUid(
-      keys.AGORA_APP_ID,
-      keys.AGORA_SECRET,
+      "37819f409bdf4c9f9405b89172a0155e",
+      "e04c71eba3134c46b40389d3f7ea06a9",
       channelId,
       0,
       RtcRole.PUBLISHER,
