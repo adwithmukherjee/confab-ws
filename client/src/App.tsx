@@ -1,6 +1,5 @@
 import { useEffect, useState, useContext } from "react";
 import UserContext from "./context/UserContext";
-import { auth, getUser } from "./api/firebase";
 import {
   BrowserRouter as Router,
   Switch,
@@ -18,8 +17,9 @@ import HomePage from "./pages/HomePage";
 import WaitlistPage from "./pages/WaitlistPage";
 import CallPage from "./pages/CallPage";
 import SignInPage from "./pages/SignInPage";
-import loadGapiClient from "./utils/loadGapiClient";
+
 import "./App.css";
+import axios from "axios";
 import Loading from "./components/Loading";
 import CreateProfilePage from "./pages/CreateProfilePage";
 
@@ -27,7 +27,6 @@ function App() {
   const [user, setUser] = useState<User | undefined>(undefined);
   const [newUser, setNewUser] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [authScriptLoaded, setAuthScriptLoaded] = useState(false);
 
   const globals: UserContextInterface = {
     user,
@@ -38,34 +37,25 @@ function App() {
     setLoading,
   };
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      loadGapiClient(window);
-    }, 1000);
-    return () => clearTimeout(timeout);
-  }, []);
+  const fetchUser = async () => {
+    const res = await axios.get("/api/current_user");
+    setUser(res.data);
+  };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      console.log("waiting");
-      if ((window as any).gapi.auth2) {
-        setAuthScriptLoaded(true);
-        clearInterval(interval);
-      }
-    }, 500);
-    return () => clearInterval(interval);
-  }, []);
+    fetchUser();
+  }, [loading]);
 
-  useEffect(() => {
-    auth.onAuthStateChanged((activeUser) => {
-      if (activeUser) {
-        getUser(activeUser.email).then((user) => {
-          setUser(user);
-        });
-      }
-      setLoading(false);
-    });
-  }, []);
+  // useEffect(() => {
+  //   auth.onAuthStateChanged((activeUser) => {
+  //     if (activeUser) {
+  //       getUser(activeUser.email).then((user) => {
+  //         setUser(user);
+  //       });
+  //     }
+  //     setLoading(false);
+  //   });
+  // }, []);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -82,11 +72,12 @@ function App() {
     },
   });
 
+  console.log(user);
   return (
     <div>
       <ThemeProvider theme={theme}>
         <UserContext.Provider value={globals}>
-          {loading || !authScriptLoaded ? (
+          {loading ? (
             <Loading />
           ) : (
             <Router>

@@ -32,7 +32,6 @@ import { blue } from "@material-ui/core/colors";
 import CancelIcon from "@material-ui/icons/Cancel";
 import EventIcon from "@material-ui/icons/Event";
 import {
-  auth,
   getCalEventDetails,
   storage,
   updateUserPhotoURL,
@@ -43,7 +42,7 @@ const titleImg = require("../assets/official-logo.svg").default;
 const muteIcon = require("../assets/mute.svg").default;
 const unmuteIcon = require("../assets/unmute.svg").default;
 const addOnIcon = require("../assets/add-on.svg").default;
-const client = AgoraRTC.createClient({ codec: "h264", mode: "rtc" });
+//const client = AgoraRTC.createClient({ codec: "h264", mode: "rtc" });
 
 export interface UserObject {
   isHost: boolean;
@@ -177,12 +176,12 @@ const Call = (props: CallProps) => {
   };
 
   const uploadImage = () => {
-    if (auth.currentUser && image) {
+    if (localUser.user && image) {
       console.log("uploading");
 
       const uploadTask = storage
         .ref()
-        .child("users/" + auth.currentUser.email)
+        .child("users/" + localUser.user.email)
         .put(image);
 
       uploadTask.then(() => {
@@ -835,4 +834,3 @@ const useStyles = makeStyles((theme) => ({
 export { useStyles };
 
 export default Call;
-

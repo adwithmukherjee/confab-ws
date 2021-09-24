@@ -24,8 +24,7 @@ function LoggedInUI({ children }) {
     handleClose();
 
     await signOut();
-    await setUser(undefined);
-    console.log(user);
+    setUser(undefined);
   };
 
   return (

@@ -1,7 +1,6 @@
 import { useContext, useState, useRef } from "react";
 import UserContext from "../context/UserContext";
 import {
-  auth,
   updateUser,
   storage,
   updateUserPhotoURL,
@@ -49,7 +48,7 @@ const CreateProfilePage = () => {
   const uploadImage = (next) => {
     const uploadTask = storage
       .ref()
-      .child("users/" + auth.currentUser.email)
+      .child("users/" + user.email)
       .put(image);
 
     uploadTask.then(() => {

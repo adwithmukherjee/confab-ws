@@ -1,2 +1,8 @@
 node_modules
+server/config/dev.js
+client/src/keys/dev.js
 .DS_Store
+
+.gitsecret/keys/random_seed
+!*.secret
+
